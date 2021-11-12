@@ -1,0 +1,11 @@
+# yaml-language-server: https://json.schemastore.org/kustomization.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./components/edge-worker.yaml
+  - ./components/main-worker.yaml
+  - ./traits/configmap-trait.yaml
+  - ./traits/env-trait.yaml
+  - ./traits/labels-trait.yaml
+  - ./traits/resource-trait.yaml
