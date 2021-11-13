@@ -31,3 +31,5 @@ spec:
         - type: labels
           properties:
             "app": "edge-worker-2"
+    - name: network
+      type: application-network

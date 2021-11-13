@@ -5,13 +5,18 @@ dependencies:
 - name: k3d
   source:
     git: https://github.com/edgefarm/devspace.base
-    subPath: /k3d
+    subPath: /environments/k3d
     branch: rework
 
 - name: sealed-secrets
   source:
     git: https://github.com/edgefarm/devspace.base
-    subPath: /sealed-secrets
+    subPath: /environments/sealed-secrets
+    branch: rework
+
+- name: edgefarm-network
+  source:
+    git: https://github.com/edgefarm/edgefarm.network
     branch: rework
 
 commands:
@@ -56,7 +61,6 @@ deployments:
 - name: vela-caps
   kubectl:
     kustomize: true
-    kustomizeArgs: ["--enable-helm"]
     manifests:
     - ./dev/manifests/vela-caps
   namespace: vela-system
@@ -64,7 +68,6 @@ deployments:
 - name: cloud-app
   kubectl:
     kustomize: true
-    kustomizeArgs: ["--enable-helm"]
     manifests:
     - ./dev/manifests/applications/cloud-app
   namespace: cloud-app
@@ -72,7 +75,13 @@ deployments:
 - name: mixed-app
   kubectl:
     kustomize: true
-    kustomizeArgs: ["--enable-helm"]
     manifests:
     - ./dev/manifests/applications/mixed-app
   namespace: mixed-app
+
+- name: mixed-app-network
+  kubectl:
+    kustomize: true
+    manifests:
+    - ./dev/manifests/applications/mixed-app-network
+  namespace: mixed-app-network
