@@ -1,0 +1,310 @@
+######################################
+# delete all TraitDefinition's
+######################################
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: annotations
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: configmap
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: cpuscaler
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: env
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: expose
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: hostalias
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: ingress
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: ingress-1-20
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: init-container
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: labels
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: lifecycle
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: nocalhost
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: node-affinity
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: pvc
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: resource
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: rollout
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: scaler
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: service-binding
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: sidecar
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: volumes
+  namespace: vela-system
+---
+######################################
+# delete all WorkflowStepDefinition's
+######################################
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  name: apply-application
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Apply raw kubernetes objects for your workflow
+      steps
+  name: apply-object
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Apply remaining components and traits
+  name: apply-remaining
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: check or install depends-on Application
+  name: depends-on-app
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Export data to config map for your workflow steps
+  name: export2config
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Export data to secret for your workflow steps
+  name: export2secret
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Read objects for your workflow steps
+  name: read-object
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Send message to webhook
+  name: webhook-notification
+  namespace: vela-system
+---
+######################################
+# delete all WorkloadDefinition's
+######################################
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkloadDefinition
+metadata:
+  name: autodetects.core.oam.dev
+  namespace: vela-system
+---
+######################################
+# delete all Application's
+######################################
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  annotations:
+    helm.sh/hook: test-success
+    helm.sh/hook-delete-policy: hook-succeeded
+  name: helm-test-vela-app
+---
+######################################
+# delete all ComponentDefinition's
+######################################
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: raw allow users to specify raw K8s object in properties
+  name: raw
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Describes jobs that run code or a script to completion.
+  name: task
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Describes long-running, scalable, containerized
+      services that have a stable network endpoint to receive external network traffic
+      from customers.
+  name: webservice
+  namespace: vela-system
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Describes long-running, scalable, containerized
+      services that running at backend. They do NOT have network endpoint to receive
+      external network traffic.
+  name: worker
+  namespace: vela-system
+---
+######################################
+# delete all PolicyDefinition's
+######################################
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: PolicyDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Apply periodical health checking to the application.
+  name: health
+  namespace: vela-system
+---
+######################################
+# delete all ScopeDefinition's
+######################################
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: ScopeDefinition
+metadata:
+  name: healthscopes.core.oam.dev
+  namespace: vela-system
