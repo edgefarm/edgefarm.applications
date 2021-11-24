@@ -9,12 +9,11 @@ spec:
   schematic:
     cue:
       template: |
-        output: {
-        	apiVersion: "network.edgefarm.io/v1alpha1"
-        	kind:       "Network"
-        	spec: size: 3
+        spec: {
+        	namespace:   context.namespace
+        	accountname: context.appName
+        	usernames: ["application-user"]
         }
-        outputs: {}
         parameter: {}
   workload:
     definition:

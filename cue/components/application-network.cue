@@ -10,11 +10,10 @@
 }
 
 template: {
-	output: {
-		apiVersion: "network.edgefarm.io/v1alpha1"
-		kind:       "Network"
-		spec: size:     3
-	}
-	outputs: {}
+    spec: {
+        namespace: context.namespace
+		accountname: context.appName
+		usernames: ["application-user"]
+    }
 	parameter: {}
 }
