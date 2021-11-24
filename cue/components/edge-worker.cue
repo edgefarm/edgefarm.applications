@@ -104,28 +104,27 @@ template: {
 								}
 							}}]
 					}
-				}
+					affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+						matchExpressions: [
+						{
+							key: "node-role.kubernetes.io/edge"
+							operator: "Exists"
+						},
+						{
+							key: "node-role.kubernetes.io/agent"
+							operator: "Exists"
+						}
+						]
+					}]
 
-				affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
-					matchExpressions: [
-					{
-						key: "node-role.kubernetes.io/edge"
-						operator: "Exists"
-					},
-					{
-						key: "node-role.kubernetes.io/agent"
-						operator: "Exists"
-					}
+					tolerations: [
+						{
+							key: "edgefarm.applications"
+							operator: "Exists"
+							effect: "NoExecute"
+						}
 					]
-				}]
-
-				tolerations: [
-					{
-						key: "edgefarm.applications"
-						operator: "Exists"
-						effect: "NoExecute"
-					}
-				]
+				}
 			}
 		}
 	}
