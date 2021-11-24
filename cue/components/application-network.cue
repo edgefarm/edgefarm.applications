@@ -11,6 +11,8 @@
 
 template: {
 	output: {
+		apiVersion: "network.edgefarm.io/v1alpha1"
+		kind:       "Network"
 		spec: {
 			namespace: context.namespace
 			accountname: context.appName
