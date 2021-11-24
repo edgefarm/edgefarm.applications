@@ -9,7 +9,7 @@ spec:
   schematic:
     cue:
       template: |
-        spec: {
+        output: spec: {
         	namespace:   context.namespace
         	accountname: context.appName
         	usernames: ["application-user"]

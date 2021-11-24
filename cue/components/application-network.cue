@@ -10,10 +10,12 @@
 }
 
 template: {
-    spec: {
-        namespace: context.namespace
-		accountname: context.appName
-		usernames: ["application-user"]
-    }
+	output: {
+		spec: {
+			namespace: context.namespace
+			accountname: context.appName
+			usernames: ["application-user"]
+		}
+	}
 	parameter: {}
 }
