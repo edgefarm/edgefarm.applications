@@ -1,0 +1,18 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: edge-app
+spec:
+  components:
+    - name: edge-worker-1
+      type: edge-worker
+      properties:
+        image: nginx
+        name: simplenginx
+        runtime: mynode
+      traits:
+        - type: labels
+          properties:
+            "app": "edge-worker-1"
+    - name: network
+      type: application-network

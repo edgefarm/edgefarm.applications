@@ -26,50 +26,50 @@ template: {
 				spec: {
 					containers: [
 						{
-						name:  context.name
-						image: parameter.image
+							name:  context.name
+							image: parameter.image
 
-						if parameter["imagePullPolicy"] != _|_ {
-							imagePullPolicy: parameter.imagePullPolicy
-						}
-
-						if parameter["cmd"] != _|_ {
-							command: parameter.cmd
-						}
-
-						if parameter["env"] != _|_ {
-							env: parameter.env
-						}
-
-						if parameter["cpu"] != _|_ {
-							resources: {
-								limits: cpu:   parameter.cpu
-								requests: cpu: parameter.cpu
+							if parameter["imagePullPolicy"] != _|_ {
+								imagePullPolicy: parameter.imagePullPolicy
 							}
-						}
 
-						if parameter["memory"] != _|_ {
-							resources: {
-								limits: memory:   parameter.memory
-								requests: memory: parameter.memory
+							if parameter["cmd"] != _|_ {
+								command: parameter.cmd
 							}
-						}
 
-						if parameter["volumes"] != _|_ {
-							volumeMounts: [ for v in parameter.volumes {
-								{
-									mountPath: v.mountPath
-									name:      v.name
-								}}]
-						}
+							if parameter["env"] != _|_ {
+								env: parameter.env
+							}
 
-						if parameter["livenessProbe"] != _|_ {
-							livenessProbe: parameter.livenessProbe
-						}
+							if parameter["cpu"] != _|_ {
+								resources: {
+									limits: cpu:   parameter.cpu
+									requests: cpu: parameter.cpu
+								}
+							}
 
-						if parameter["readinessProbe"] != _|_ {
-							readinessProbe: parameter.readinessProbe
-						}
+							if parameter["memory"] != _|_ {
+								resources: {
+									limits: memory:   parameter.memory
+									requests: memory: parameter.memory
+								}
+							}
+
+							if parameter["volumes"] != _|_ {
+								volumeMounts: [ for v in parameter.volumes {
+									{
+										mountPath: v.mountPath
+										name:      v.name
+									}}]
+							}
+
+							if parameter["livenessProbe"] != _|_ {
+								livenessProbe: parameter.livenessProbe
+							}
+
+							if parameter["readinessProbe"] != _|_ {
+								readinessProbe: parameter.readinessProbe
+							}
 						},
 						{
 							"name":  "nats-leafnode-client"
@@ -123,6 +123,12 @@ template: {
 						{
 							key: "node-role.kubernetes.io/agent"
 							operator: "Exists"
+						},
+						{
+						if parameter["runtime"] != _|_ {
+							key: parameter.runtime
+							operator: "Exists"
+						}
 						}
 						]
 					}]
@@ -144,6 +150,9 @@ template: {
 		// +short=i
 		image: string
 
+		// +usage=Speficy edge runtimes that receive the application.
+		runtime?: string
+					
 		// +usage=Specify image pull policy for your service
 		imagePullPolicy?: string
 
