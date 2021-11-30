@@ -11,6 +11,11 @@
 template: {
 	output: {
 		apiVersion: "apps/v1"
+		"metadata": {
+			"labels": {
+				"node-dns.host": context.appName
+			}
+		},
 		kind:       "DaemonSet"
 		spec: {
 			selector: matchLabels: "app.oam.dev/component": context.name
@@ -19,7 +24,8 @@ template: {
 				metadata: labels: "app.oam.dev/component": context.name
 
 				spec: {
-					containers: [{
+					containers: [
+						{
 						name:  context.name
 						image: parameter.image
 
@@ -64,8 +70,12 @@ template: {
 						if parameter["readinessProbe"] != _|_ {
 							readinessProbe: parameter.readinessProbe
 						}
-
-					}]
+						},
+						{
+							"name":  "nats-leafnode-client"
+							"image": "ci4rail/nats-leafnode-client"
+						},
+					]
 
 					if parameter["imagePullSecrets"] != _|_ {
 						imagePullSecrets: [ for v in parameter.imagePullSecrets {
