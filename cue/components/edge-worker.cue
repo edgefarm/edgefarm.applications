@@ -1,3 +1,7 @@
+package stdlib
+
+import "list"
+
 "edge-worker": {
 	type: "component"
 	annotations: {}
@@ -72,8 +76,9 @@ template: {
 							}
 						},
 						{
-							"name":  "nats-leafnode-client"
+							"name":  "nats-leafnode-sidecar"
 							"image": "ci4rail/nats-leafnode-client"
+							"cmd":  ["/bin/sh", "-c", "client natsuri nats://nats.nats:4222"]
 						},
 					]
 
@@ -115,22 +120,13 @@ template: {
 							}}]
 					}
 					affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
-						matchExpressions: [
-						{
-							key: "node-role.kubernetes.io/edge"
-							operator: "Exists"
-						},
-						{
-							key: "node-role.kubernetes.io/agent"
-							operator: "Exists"
-						},
-						{
-						if parameter["runtime"] != _|_ {
-							key: parameter.runtime
-							operator: "Exists"
-						}
-						}
-						]
+						matchExpressions: [ 
+							for v in list.FlattenN(#MatchExpressions, 1) {
+							{
+								key: v
+								operator: "Exists"
+							}}
+							]
 					}]
 
 					tolerations: [
@@ -150,8 +146,8 @@ template: {
 		// +short=i
 		image: string
 
-		// +usage=Speficy edge runtimes that receive the application.
-		runtime?: string
+		// +usage=Specify runtimes that shall receive the application. If not specified, the application will be deployed on all runtimes.
+		runtime: [...string]
 					
 		// +usage=Specify image pull policy for your service
 		imagePullPolicy?: string
@@ -224,6 +220,8 @@ template: {
 		// +usage=Instructions for assessing whether the container is in a suitable state to serve traffic.
 		readinessProbe?: #HealthProbe
 	}
+
+	#MatchExpressions: [ "node-role.kubernetes.io/edge", "node-role.kubernetes.io/agent", parameter.runtime ]
 
 	#HealthProbe: {
 

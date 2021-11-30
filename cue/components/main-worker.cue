@@ -1,3 +1,7 @@
+package stdlib
+
+import "list"
+
 "main-worker": {
 	type: "component"
 	annotations: {}
@@ -104,6 +108,15 @@ template: {
 								}
 							}}]
 					}
+					affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+						matchExpressions: [ 
+							for v in list.FlattenN(#MatchExpressions, 1) {
+							{
+								key: v
+								operator: "Exists"
+							}}
+							]
+					}]
 				}
 			}
 		}
@@ -113,6 +126,9 @@ template: {
 		// +usage=Which image would you like to use for your service
 		// +short=i
 		image: string
+
+		// +usage=Specify runtimes that shall receive the application. If not specified, the application will be deployed on all runtimes.
+		runtime: [...string]
 
 		// +usage=Specify image pull policy for your service
 		imagePullPolicy?: string
@@ -185,6 +201,8 @@ template: {
 		// +usage=Instructions for assessing whether the container is in a suitable state to serve traffic.
 		readinessProbe?: #HealthProbe
 	}
+
+	#MatchExpressions: [ parameter.runtime ]
 
 	#HealthProbe: {
 

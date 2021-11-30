@@ -9,12 +9,15 @@ spec:
   schematic:
     cue:
       template: |
+        import "list"
+
         output: {
         	apiVersion: "apps/v1"
         	metadata: labels: "node-dns.host": context.appName
         	kind: "DaemonSet"
         	spec: {
         		selector: matchLabels: "app.oam.dev/component": context.name
+
         		template: {
         			metadata: labels: "app.oam.dev/component": context.name
 
@@ -67,8 +70,9 @@ spec:
         						}
         					},
         					{
-        						name:  "nats-leafnode-client"
+        						name:  "nats-leafnode-sidecar"
         						image: "ci4rail/nats-leafnode-client"
+        						cmd: ["/bin/sh", "-c", "client natsuri nats://nats.nats:4222"]
         					},
         				]
 
@@ -111,22 +115,14 @@ spec:
         				}
         				affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
         					matchExpressions: [
-        						{
-        							key:      "node-role.kubernetes.io/edge"
-        							operator: "Exists"
-        						},
-        						{
-        							key:      "node-role.kubernetes.io/agent"
-        							operator: "Exists"
-        						},
-        						{
-        							if parameter["runtime"] != _|_ {
-        								key:      parameter.runtime
+        						for v in list.FlattenN(#MatchExpressions, 1) {
+        							{
+        								key:      v
         								operator: "Exists"
-        							}
-        						},
+        							}},
         					]
         				}]
+
         				tolerations: [
         					{
         						key:      "edgefarm.applications"
@@ -143,8 +139,8 @@ spec:
         	// +short=i
         	image: string
 
-        	// +usage=Speficy edge runtimes that receive the application.
-        	runtime?: string
+        	// +usage=Specify runtimes that shall receive the application. If not specified, the application will be deployed on all runtimes.
+        	runtime: [...string]
 
         	// +usage=Specify image pull policy for your service
         	imagePullPolicy?: string
@@ -217,6 +213,7 @@ spec:
         	// +usage=Instructions for assessing whether the container is in a suitable state to serve traffic.
         	readinessProbe?: #HealthProbe
         }
+        #MatchExpressions: [ "node-role.kubernetes.io/edge", "node-role.kubernetes.io/agent", parameter.runtime]
         #HealthProbe: {
 
         	// +usage=Instructions for assessing container health by executing a command. Either this attribute or the httpGet attribute or the tcpSocket attribute MUST be specified. This attribute is mutually exclusive with both the httpGet attribute and the tcpSocket attribute.
