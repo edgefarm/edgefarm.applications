@@ -16,8 +16,11 @@ template: {
 		spec: {
 			namespace: context.namespace
 			accountname: context.appName
-			usernames: ["application-user"]
+			usernames: parameter.usernames
 		}
 	}
-	parameter: {}
+	parameter: {
+		// +usage=Specify the usernames to be used for the network.
+		usernames: [...string]
+	}
 }

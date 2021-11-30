@@ -15,11 +15,15 @@ spec:
         	spec: {
         		namespace:   context.namespace
         		accountname: context.appName
-        		usernames: ["application-user"]
+        		usernames:   parameter.usernames
         	}
         }
-        parameter: {}
+        parameter: {
+        	// +usage=Specify the usernames to be used for the network.
+        	usernames: [...string]
+        }
   workload:
     definition:
       apiVersion: network.edgefarm.io/v1alpha1
       kind: Network
+

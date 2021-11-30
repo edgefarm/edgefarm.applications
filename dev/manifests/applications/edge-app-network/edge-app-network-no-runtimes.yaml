@@ -15,3 +15,6 @@ spec:
             "app": "edge-worker-1"
     - name: network
       type: application-network
+      properties:
+        usernames:
+          - edge-worker-1

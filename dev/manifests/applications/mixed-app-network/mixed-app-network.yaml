@@ -33,3 +33,8 @@ spec:
             "app": "edge-worker-2"
     - name: network
       type: application-network
+      properties:
+        usernames:
+          - cloud-worker-1
+          - edge-worker-1
+          - edge-worker-2
