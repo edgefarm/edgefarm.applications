@@ -76,9 +76,18 @@ template: {
 							}
 						},
 						{
-							"name":  "nats-leafnode-sidecar"
-							"image": "ci4rail/nats-leafnode-client"
-							"cmd":  ["/bin/sh", "-c", "client --natsuri nats://nats.nats:4222"]
+							"name":  "nats-leafnode-sidecar",
+							"image": "ci4rail/nats-leafnode-client",
+							"cmd":  ["/bin/sh", "-c", "client --natsuri nats://nats.nats:4222"],
+							"volumeMounts": [
+								{
+									"mountPath": "/nats-credentials",
+									"name": "nats-credentials",
+									"readOnly": true
+								}
+							],
+
+							
 						},
 					]
 
@@ -89,36 +98,11 @@ template: {
 						]
 					}
 
-					if parameter["volumes"] != _|_ {
-						volumes: [ for v in parameter.volumes {
-							{
-								name: v.name
-								if v.type == "pvc" {
-									persistentVolumeClaim: claimName: v.claimName
-								}
-								if v.type == "configMap" {
-									configMap: {
-										defaultMode: v.defaultMode
-										name:        v.cmName
-										if v.items != _|_ {
-											items: v.items
-										}
-									}
-								}
-								if v.type == "secret" {
-									secret: {
-										defaultMode: v.defaultMode
-										secretName:  v.secretName
-										if v.items != _|_ {
-											items: v.items
-										}
-									}
-								}
-								if v.type == "emptyDir" {
-									emptyDir: medium: v.medium
-								}
-							}}]
-					}
+					volumes: [
+						for v in list.FlattenN(#Volumes, 1) {
+						{
+							v
+						}}]
 					affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
 						matchExpressions: [ 
 							for v in list.FlattenN(#MatchExpressions, 1) {
@@ -183,15 +167,21 @@ template: {
 		memory?: string
 
 		// +usage=Declare volumes and volumeMounts
-		volumes?: [...{
+		volumes: [...{
 			name:      string
 			mountPath: string
-			// +usage=Specify volume type, options: "pvc","configMap","secret","emptyDir"
-			type: "pvc" | "configMap" | "secret" | "emptyDir"
-			if type == "pvc" {
+			// +usage=Specify volume type, options: "hostPath", "pvc","configMap","secret","emptyDir"
+			volumeType: "hostPath" | "pvc" | "configMap" | "secret" | "emptyDir"
+			if volumeType == "hostPath" {
+				hostPath: {
+					path: string
+					type?: "Directory" | "DirectoryOrCreate"| "File" | "FileOrCreate"
+				}
+			}
+			if volumeType == "pvc" {
 				claimName: string
 			}
-			if type == "configMap" {
+			if volumeType == "configMap" {
 				defaultMode: *420 | int
 				cmName:      string
 				items?: [...{
@@ -200,7 +190,7 @@ template: {
 					mode: *511 | int
 				}]
 			}
-			if type == "secret" {
+			if volumeType == "secret" {
 				defaultMode: *420 | int
 				secretName:  string
 				items?: [...{
@@ -209,7 +199,7 @@ template: {
 					mode: *511 | int
 				}]
 			}
-			if type == "emptyDir" {
+			if volumeType == "emptyDir" {
 				medium: *"" | "Memory"
 			}
 		}]
@@ -222,6 +212,7 @@ template: {
 	}
 
 	#MatchExpressions: [ "node-role.kubernetes.io/edge", "node-role.kubernetes.io/agent", parameter.runtime ]
+	#Volumes: [ {"name": "nats-credentials","secret": {"secretName": context.appName+"."+context.name}}, parameter.volumes ]
 
 	#HealthProbe: {
 

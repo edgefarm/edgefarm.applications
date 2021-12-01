@@ -1,0 +1,52 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: mixed-app-network-volume
+spec:
+  components:
+    - name: cloud-worker-1
+      type: main-worker
+      properties:
+        image: nginx
+        name: simplenginx
+      traits:
+        - type: labels
+          properties:
+            "app": "cloud-worker-1"
+    - name: edge-worker-1
+      type: edge-worker
+      properties:
+        image: nginx
+        name: simplenginx
+        volumes:
+          - name: "edge-worker-1-volume"
+            mountPath: "/mountedPath"
+            volumeType: "hostPath"
+            hostPath:
+              path: "/tmp/edge-worker-1-volume"
+          - name: "edge-worker-1-volume-second"
+            mountPath: "/mountedOtherPath"
+            volumeType: "hostPath"
+            hostPath:
+              path: "/tmp/edge-worker-1-volume-second"
+      traits:
+        - type: labels
+          properties:
+            "app": "edge-worker-1"
+
+    - name: edge-worker-2
+      type: edge-worker
+      properties:
+        image: nginx
+        name: simplenginx
+      traits:
+        - type: labels
+          properties:
+            "app": "edge-worker-2"
+    - name: network
+      type: application-network
+      properties:
+        usernames:
+          - cloud-worker-1
+          - edge-worker-1
+          - edge-worker-2
