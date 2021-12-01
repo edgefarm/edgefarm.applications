@@ -78,7 +78,7 @@ template: {
 						{
 							"name":  "nats-leafnode-sidecar"
 							"image": "ci4rail/nats-leafnode-client"
-							"cmd":  ["/bin/sh", "-c", "client natsuri nats://nats.nats:4222"]
+							"cmd":  ["/bin/sh", "-c", "client --natsuri nats://nats.nats:4222"]
 						},
 					]
 
