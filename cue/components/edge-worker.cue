@@ -37,8 +37,12 @@ template: {
 								imagePullPolicy: parameter.imagePullPolicy
 							}
 
-							if parameter["cmd"] != _|_ {
-								command: parameter.cmd
+							if parameter["command"] != _|_ {
+								command: parameter.command
+							}
+
+							if parameter["args"] != _|_ {
+								args: parameter.args
 							}
 
 							if parameter["env"] != _|_ {
@@ -143,7 +147,10 @@ template: {
 		imagePullSecrets?: [...string]
 
 		// +usage=Commands to run in the container
-		cmd?: [...string]
+		command?: [...string]
+
+		// +usage=Args to run for the command
+		args?: [...string]
 
 		// +usage=Define arguments by using environment variables
 		env?: [...{
