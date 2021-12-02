@@ -60,7 +60,7 @@ template: {
 							}
 
 							if parameter["volumes"] != _|_ {
-								volumeMounts: [ for v in parameter.volumes {
+								volumeMounts: [ for v in list.FlattenN(#Volumes, 1) {
 									{
 										mountPath: v.mountPath
 										name:      v.name
@@ -81,13 +81,16 @@ template: {
 							"cmd":  ["/bin/sh", "-c", "client --natsuri nats://nats.nats:4222"],
 							"volumeMounts": [
 								{
-									"mountPath": "/nats-credentials",
 									"name": "nats-credentials",
+									"mountPath": "/nats-credentials",
+									"readOnly": true
+								},
+								{
+									"name": "resolv",
+									"mountPath": "/etc/resolv.conf",
 									"readOnly": true
 								}
 							],
-
-							
 						},
 					]
 
@@ -212,7 +215,9 @@ template: {
 	}
 
 	#MatchExpressions: [ "node-role.kubernetes.io/edge", "node-role.kubernetes.io/agent", parameter.runtime ]
-	#Volumes: [ {"name": "nats-credentials","secret": {"secretName": context.appName+"."+context.name}}, parameter.volumes ]
+	#Volumes: [ {"name": "nats-credentials","volumeType": "secret", "mountPath":"/nats-credentials", "secret": {"secretName": context.appName+"."+context.name}}, 
+				{"name": "resolv", "volumeType": "hostPath", "mountPath":"/etc/resolv.conf", "hostPath": {"path": "/etc/resolv.conf", "type": "File"}},
+				parameter.volumes ]
 
 	#HealthProbe: {
 
