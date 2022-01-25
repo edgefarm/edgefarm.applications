@@ -4,7 +4,7 @@ metadata:
   name: mixed-app
 spec:
   components:
-    - name: cloud-worker-1
+    - name: cloud-application1
       type: main-worker
       properties:
         image: nginx
@@ -12,8 +12,8 @@ spec:
       traits:
         - type: labels
           properties:
-            "app": "cloud-worker-1"
-    - name: edge-worker-1
+            "app": "cloud-application1"
+    - name: edge-application1
       type: edge-worker
       properties:
         image: nginx
@@ -21,8 +21,8 @@ spec:
       traits:
         - type: labels
           properties:
-            "app": "edge-worker-1"
-    - name: edge-worker-2
+            "app": "edge-application1"
+    - name: edge-application2
       type: edge-worker
       properties:
         image: nginx
@@ -30,4 +30,4 @@ spec:
       traits:
         - type: labels
           properties:
-            "app": "edge-worker-2"
+            "app": "edge-application2"

@@ -4,7 +4,7 @@ metadata:
   name: edge-app-network
 spec:
   components:
-    - name: edge-worker-1
+    - name: edge-application1
       type: edge-worker
       properties:
         image: nginx
@@ -15,9 +15,9 @@ spec:
       traits:
         - type: labels
           properties:
-            "app": "edge-worker-1"
+            "app": "edge-application1"
     - name: network
       type: application-network
       properties:
         usernames:
-          - edge-worker-1
+          - edge-application1

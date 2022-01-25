@@ -9,6 +9,8 @@ spec:
   schematic:
     cue:
       template: |
+        import "list"
+
         output: {
         	apiVersion: "apps/v1"
         	kind:       "Deployment"
@@ -104,6 +106,15 @@ spec:
         							}
         						}}]
         				}
+        				affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+        					matchExpressions: [
+        						for v in list.FlattenN(#MatchExpressions, 1) {
+        							{
+        								key:      v
+        								operator: "Exists"
+        							}},
+        					]
+        				}]
         			}
         		}
         	}
@@ -112,6 +123,9 @@ spec:
         	// +usage=Which image would you like to use for your service
         	// +short=i
         	image: string
+
+        	// +usage=Specify runtimes that shall receive the application. If not specified, the application will be deployed on all runtimes.
+        	runtime: [...string]
 
         	// +usage=Specify image pull policy for your service
         	imagePullPolicy?: string
@@ -184,6 +198,7 @@ spec:
         	// +usage=Instructions for assessing whether the container is in a suitable state to serve traffic.
         	readinessProbe?: #HealthProbe
         }
+        #MatchExpressions: [ parameter.runtime]
         #HealthProbe: {
 
         	// +usage=Instructions for assessing container health by executing a command. Either this attribute or the httpGet attribute or the tcpSocket attribute MUST be specified. This attribute is mutually exclusive with both the httpGet attribute and the tcpSocket attribute.
@@ -229,3 +244,4 @@ spec:
     definition:
       apiVersion: apps/v1
       kind: Deployment
+
