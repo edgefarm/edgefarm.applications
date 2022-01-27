@@ -81,7 +81,7 @@ template: {
 						},
 						{
 							"name":  "nats-leafnode-sidecar",
-							"image": "ci4rail/dev-nats-leafnode-client:55ad0b3",
+							"image": "ci4rail/dev-nats-leafnode-client:dc211dc7",
 							"command":  ["/bin/sh", "-c", "/client --natsuri nats://nats.nats:4222"],
 							"volumeMounts": [
 								{
