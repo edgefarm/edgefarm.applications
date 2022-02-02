@@ -13,8 +13,14 @@ template: {
 	output: {
 		apiVersion: "network.edgefarm.io/v1alpha1"
 		kind:       "Network"
-		spec: size:     3
+		spec: {
+			namespace: context.namespace
+			accountname: context.appName
+			usernames: parameter.usernames
+		}
 	}
-	outputs: {}
-	parameter: {}
+	parameter: {
+		// +usage=Specify the usernames to be used for the network.
+		usernames: [...string]
+	}
 }

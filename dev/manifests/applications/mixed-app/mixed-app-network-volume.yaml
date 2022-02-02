@@ -1,7 +1,7 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: mixed-app
+  name: mixed-app-network-volume
 spec:
   components:
     - name: cloud-application1
@@ -18,10 +18,22 @@ spec:
       properties:
         image: nginx
         name: simplenginx
+        volumes:
+          - name: "edge-application1-volume"
+            mountPath: "/mountedPath"
+            volumeType: "hostPath"
+            hostPath:
+              path: "/tmp/edge-application1-volume"
+          - name: "edge-application1-volume-second"
+            mountPath: "/mountedOtherPath"
+            volumeType: "hostPath"
+            hostPath:
+              path: "/tmp/edge-application1-volume-second"
       traits:
         - type: labels
           properties:
             "app": "edge-application1"
+
     - name: edge-application2
       type: edge-worker
       properties:
@@ -31,3 +43,10 @@ spec:
         - type: labels
           properties:
             "app": "edge-application2"
+    - name: network
+      type: application-network
+      properties:
+        usernames:
+          - cloud-application1
+          - edge-application1
+          - edge-application2

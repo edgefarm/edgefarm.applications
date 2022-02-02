@@ -5,4 +5,6 @@ kind: Kustomization
 namespace: mixed-app
 
 resources:
-- "./mixed-app.yaml"
+  - "./mixed-app.yaml"
+  - "./mixed-appnetwork.yaml"
+  - "./mixed-appnetwork-volume.yaml"
