@@ -202,7 +202,7 @@ template: {
 		readinessProbe?: #HealthProbe
 	}
 
-	#MatchExpressions: [ parameter.runtime ]
+	#MatchExpressions: [ "edgefarm.applications", parameter.runtime ]
 
 	#HealthProbe: {
 
