@@ -16,10 +16,10 @@ spec:
         	metadata: labels: "node-dns.host": context.appName
         	kind: "DaemonSet"
         	spec: {
-        		selector: matchLabels: "app.oam.dev/component": context.name
+        		selector: matchLabels: "k8s-app": context.name
 
         		template: {
-        			metadata: labels: "app.oam.dev/component": context.name
+        			metadata: labels: "k8s-app": context.name
 
         			spec: {
         				containers: [
@@ -57,14 +57,6 @@ spec:
         							}
         						}
 
-        						if parameter["volumes"] != _|_ {
-        							volumeMounts: [ for v in list.FlattenN(#Volumes, 1) {
-        								{
-        									mountPath: v.mountPath
-        									name:      v.name
-        								}}]
-        						}
-
         						if parameter["livenessProbe"] != _|_ {
         							livenessProbe: parameter.livenessProbe
         						}
@@ -73,23 +65,7 @@ spec:
         							readinessProbe: parameter.readinessProbe
         						}
         					},
-        					{
-        						name:  "nats-leafnode-sidecar"
-        						image: "ci4rail/nats-leafnode-client:46c637d4"
-        						command: ["/bin/sh", "-c", "/client --natsuri nats://nats.nats:4222"]
-        						volumeMounts: [
-        							{
-        								name:      "nats-credentials"
-        								mountPath: "/nats-credentials"
-        								readOnly:  true
-        							},
-        							{
-        								name:      "resolv"
-        								mountPath: "/etc/resolv.conf"
-        								readOnly:  true
-        							},
-        						]
-        					},
+
         				]
 
         				if parameter["imagePullSecrets"] != _|_ {
@@ -99,11 +75,6 @@ spec:
         					]
         				}
 
-        				volumes: [
-        					for v in list.FlattenN(#Volumes, 1) {
-        						{
-        							v
-        						}}]
         				affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
         					matchExpressions: [
         						for v in list.FlattenN(#MatchExpressions, 1) {
@@ -169,44 +140,6 @@ spec:
         	// +usage=Specifies the attributes of the memory resource required for the container.
         	memory?: string
 
-        	// +usage=Declare volumes and volumeMounts
-        	volumes: [...{
-        		name:      string
-        		mountPath: string
-        		// +usage=Specify volume type, options: "hostPath", "pvc","configMap","secret","emptyDir"
-        		volumeType: "hostPath" | "pvc" | "configMap" | "secret" | "emptyDir"
-        		if volumeType == "hostPath" {
-        			hostPath: {
-        				path:  string
-        				type?: "Directory" | "DirectoryOrCreate" | "File" | "FileOrCreate"
-        			}
-        		}
-        		if volumeType == "pvc" {
-        			claimName: string
-        		}
-        		if volumeType == "configMap" {
-        			defaultMode: *420 | int
-        			cmName:      string
-        			items?: [...{
-        				key:  string
-        				path: string
-        				mode: *511 | int
-        			}]
-        		}
-        		if volumeType == "secret" {
-        			defaultMode: *420 | int
-        			secretName:  string
-        			items?: [...{
-        				key:  string
-        				path: string
-        				mode: *511 | int
-        			}]
-        		}
-        		if volumeType == "emptyDir" {
-        			medium: *"" | "Memory"
-        		}
-        	}]
-
         	// +usage=Instructions for assessing whether the container is alive.
         	livenessProbe?: #HealthProbe
 
@@ -214,21 +147,6 @@ spec:
         	readinessProbe?: #HealthProbe
         }
         #MatchExpressions: [ "node-role.kubernetes.io/edge", "node-role.kubernetes.io/agent", parameter.runtime]
-        #Volumes: [ {
-        	name:       "nats-credentials"
-        	volumeType: "secret"
-        	mountPath:  "/nats-credentials"
-        	secret: secretName: context.appName + "." + context.name
-        },
-        	{
-        		name:       "resolv"
-        		volumeType: "hostPath"
-        		mountPath:  "/etc/resolv.conf"
-        		hostPath: {
-        			path: "/etc/resolv.conf"
-        			type: "File"
-        		}},
-        	parameter.volumes]
         #HealthProbe: {
 
         	// +usage=Instructions for assessing container health by executing a command. Either this attribute or the httpGet attribute or the tcpSocket attribute MUST be specified. This attribute is mutually exclusive with both the httpGet attribute and the tcpSocket attribute.

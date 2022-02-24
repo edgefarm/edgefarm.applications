@@ -8,16 +8,10 @@ The specified main-worker resource `cloud-application1` is labeled with `app: cl
 The specified edge-worker resource `edge-application1` is labeled with `app: edge-application1`.
 The specified edge-worker resource `edge-application2` is labeled with `app: edge-application2`.
 
-See the [mixed-app-network.yaml](mixed-app-network.yaml) for details.
-
-# mixed-app-network
-
-This example is very similar to `mixed-app` but on top introduces the `network` field which allows to define which application can communicate through `edgefarm.network`. The name in the usernames field must match with the name of the component of types `edge-worker` and `main-worker`.
-
-See the [mixed-app-network.yaml](mixed-app-network.yaml) for details.
+See the [mixed-app.yaml](mixed-app.yaml) for details.
 
 # mixed-app-network-volume
 
-This example is very similar to `mixed-app-network` but on top introduces the `volume` property for `edge-application1`. This property allows to define a volume that will be mounted on the application.
+This example is very similar to `mixed-app` but on top introduces the `volume` property for `edge-application1`. This property allows to define a volume that will be mounted on the application.
 
-See the [mixed-app-network-volume.yaml](mixed-app-network-volume.yaml) for details.
+See the [mixed-app-volume.yaml](mixed-app-volume.yaml) for details.
