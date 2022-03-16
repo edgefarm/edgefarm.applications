@@ -19,10 +19,19 @@ spec:
       traits:
         - type: network-participant
           properties:
-            network: nats-box-network
-        - type: network-participant
+            networks:
+              - nats-box-network
+              - nats-box-network2
+              - nats-box-network3
+        - type: volumes
           properties:
-            network: nats-box-network2
+            volumes:
+              - name: mymount
+                type: hostPath
+                mountPath: /mymount
+                path: /host/path
+                mountType: DirectoryOrCreate
+
     - type: application-network
       name: nats-box-network
       properties:
@@ -35,7 +44,15 @@ spec:
       name: nats-box-network2
       properties:
         streams:
-          - name: data2
+          - name: data
             subjects:
-              - data2
+              - data
+            storage: file
+    - type: application-network
+      name: nats-box-network3
+      properties:
+        streams:
+          - name: data
+            subjects:
+              - data
             storage: file

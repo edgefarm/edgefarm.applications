@@ -14,8 +14,9 @@ template: {
 		apiVersion: "network.edgefarm.io/v1alpha1"
 		kind:       "Network"
 		spec: {
+			app: context.appName
 			namespace: context.namespace
-			accountname: context.appName
+			accountname: context.appName // to be deleted?
 			streams: parameter.streams
 			imports: []
 			participants: []
