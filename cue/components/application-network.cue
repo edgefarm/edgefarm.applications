@@ -19,7 +19,7 @@ template: {
 			accountname: context.appName // to be deleted?
 			streams: parameter.streams
 			imports: []
-			participants: []
+			participants: {[string]: string}
 		}
 	}
 	parameter: {
