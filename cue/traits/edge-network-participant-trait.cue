@@ -1,9 +1,9 @@
-"network-participant": {
+"edge-network-participant": {
     type: "trait"
     annotations: {}
     labels: {
     }
-    description: "Add network-participant on application for specific component."
+    description: "Add network-participant on application for specific component that runs on the edge device."
     attributes: {
         appliesToWorkloads: ["*"]
         podDisruptive: true
@@ -23,6 +23,7 @@ template: {
                     component: context.name
                     network: n
                     app: context.appName
+                    type: "edge"
                 }
             }
         }
