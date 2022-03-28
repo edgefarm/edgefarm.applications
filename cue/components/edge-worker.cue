@@ -49,6 +49,10 @@ template: {
 								env: parameter.env
 							}
 
+							if parameter["ports"] != _|_ {
+								ports: parameter.ports
+							}
+
 							if parameter["cpu"] != _|_ {
 								resources: {
 									limits: cpu:   parameter.cpu
@@ -140,6 +144,19 @@ template: {
 				}
 			}
 		}]
+
+		// +usage=Define arguments by using port mappings
+		ports?: [...{
+			// +usage=Name of the port mapping
+			name?: string
+			// +usage=The container port to expose
+			containerPort: int
+			// +usage=The host port the container port is mapped to
+			hostPort: int
+			// +usage=The protocol of the port mapping
+			protocol?: string
+		}]
+
 
 		// +usage=Number of CPU units for the service, like `0.5` (0.5 CPU core), `1` (1 CPU core)
 		cpu?: string
