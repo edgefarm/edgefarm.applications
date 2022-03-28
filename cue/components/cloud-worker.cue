@@ -78,6 +78,17 @@ template: {
 						]
 					}
 
+					if parameter["labelSelector"] != _|_ {
+					affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+						matchExpressions: [ 
+							for v in parameter.labelSelector {
+							{
+								key: v
+								operator: "Exists"
+							}}
+							]
+					}]
+					}
 				}
 			}
 		}
@@ -87,6 +98,9 @@ template: {
 		// +usage=Which image would you like to use for your service
 		// +short=i
 		image: string
+
+		// +usage=labelSelector define labels that must be present on cloud nodes to receive the application. If not specified, the application will be deployed to any cloud node.
+		labelSelector?: [...string]
 
 		// +usage=Specify image pull policy for your service
 		imagePullPolicy?: string
