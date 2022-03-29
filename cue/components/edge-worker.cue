@@ -113,7 +113,7 @@ template: {
 		image: string
 
 		// +usage=Specify runtimes that shall receive the application. If not specified, the application will be deployed on all runtimes.
-		runtime?: [...string]
+		runtime: [...string]
 					
 		// +usage=Specify image pull policy for your service
 		imagePullPolicy?: string
@@ -171,6 +171,7 @@ template: {
 		readinessProbe?: #HealthProbe
 	}
 
+	// Note: parameter.runtime MUST not be an optional property, otherwise the deployment will fail.
 	#MatchExpressions: [ "node-role.kubernetes.io/edge", "node-role.kubernetes.io/agent", parameter.runtime ]
 
 	#HealthProbe: {
