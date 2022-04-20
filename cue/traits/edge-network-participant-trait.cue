@@ -29,23 +29,33 @@ template: {
         }
     }
     patch: {
-        metadata: annotations: {
-            {"secret.reloader.stakater.com/reload": context.appName+"."+context.name+".dapr"    }
+        metadata: {
+            annotations: {
+                "secret.reloader.stakater.com/reload": context.appName+"."+context.name+".dapr"    
+            }
         }
-
         // +patchKey=name
+        spec: selector: matchLabels: {
+                    for _, n in parameter.networks {
+                        "participant.edgefarm.io/\(n)": "\(n)"
+                    }
+        }
+        spec: template:  metadata: {
+            finalizers:  [
+                "applications.edgefarm.io/finalizer"
+            ]
+            labels: {
+                for _, n in parameter.networks {
+                    "participant.edgefarm.io/\(n)": "\(n)"
+                }
+            }
+        }
         spec: template: spec: {
             volumes: [
                 {
                     name: "creds",
                     secret:
                         secretName: context.appName+"."+context.name
-                },
-                {
-                    name: "resolv", 
-                    hostPath:
-                        path: "/etc/resolv.conf"
-                        type: "File"
                 },
                 {
                     name: "dapr-components", 
@@ -57,24 +67,43 @@ template: {
         spec: template: spec: {
                 // +patchKey=name
                 containers: [{
-                                "volumeMounts": [{
-                                    "name": "creds"
-                                    "mountPath": "/nats-credentials"
-                                }]
+                                "env": [
+                                    {
+                                        "name": "DAPR_GRPC_ADDRESS",
+                                        "value": "localhost:3500"
+                                    },
+                                    {
+                                        "name": "DAPR_HTTP_ADDRESS",
+                                        "value": "localhost:3501"
+                                    }
+                                ],
+                                "volumeMounts": [
+                                    {
+                                        "name": "creds"
+                                        "mountPath": "/nats-credentials"
+                                    }
+                                ]
                             },
                             {
                             "name":  "nats-leafnode-sidecar",
-                            "image": "ci4rail/nats-leafnode-client:528ef57d",
-                            "command":  ["/bin/sh", "-c", "/client --natsuri nats://nats.nats:4222 --creds /creds --component "+context.name],
+                            "image": "ci4rail/nats-leafnode-client:972bd5b3",
+                            "command":  ["/bin/sh", "-c", "env && echo $REMOTE && /client --remote $REMOTE --natsuri nats://leaf-nats.nats:4222 --creds /creds --component "+context.name],
+                            "env": [
+                                {
+                                    "name": "REMOTE",
+                                    "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "nats-server-info",
+                                        "key": "LEAF_ADDRESS",
+                                        "optional": false
+                                        }
+                                    }
+                                }
+                            ],
                             "volumeMounts": [
                                 {
                                     "name": "creds",
                                     "mountPath": "/creds",
-                                    "readOnly": true
-                                },
-                                {
-                                    "name": "resolv",
-                                    "mountPath": "/etc/resolv.conf",
                                     "readOnly": true
                                 }
                             ],

@@ -15,17 +15,22 @@ import "list"
 template: {
 	output: {
 		apiVersion: "apps/v1"
-		metadata: {
-			labels: {
-				"node-dns.host": context.appName
-			}
-		},
 		kind:       "DaemonSet"
 		spec: {
-			selector: matchLabels: "k8s-app": context.name
+			selector: matchLabels: {
+						"app.kubernetes.io/component": context.name,
+						"app.kubernetes.io/app": context.appName,
+						"node-dns.host": context.appName,
+					}
 
 			template: {
-				metadata: labels: "k8s-app": context.name
+				metadata: {
+					labels: {
+						"app.kubernetes.io/component": context.name,
+						"app.kubernetes.io/app": context.appName,
+						"node-dns.host": context.appName,
+					}
+				}
 
 				spec: {
 					containers: [

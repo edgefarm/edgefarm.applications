@@ -9,7 +9,7 @@ This repository contains the source of the edgefarm.applications custom resource
 
 ## Examples
 
-See the [dev/manifests/applications](dev/manifests/applications/README.md) directory for example manifests.
+See the [dev/manifests/applications/examples](dev/manifests/applications/examples/README.md) directory for example manifests.
 
 ## Development
 

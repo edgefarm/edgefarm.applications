@@ -15,10 +15,18 @@ template: {
 		apiVersion: "apps/v1"
 		kind:       "Deployment"
 		spec: {
-			selector: matchLabels: "k8s-app": context.name
+			selector: matchLabels: {
+						"app.kubernetes.io/component": context.name,
+						"app.kubernetes.io/app": context.appName,
+					}
 
 			template: {
-				metadata: labels: "k8s-app": context.name
+				metadata: {
+					labels: {
+						"app.kubernetes.io/component": context.name,
+						"app.kubernetes.io/app": context.appName,
+					}
+				}
 
 				spec: {
 					containers: [
