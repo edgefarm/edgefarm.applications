@@ -29,17 +29,36 @@ template: {
         }
     }
     patch: {
-        metadata: annotations: {
-            {"secret.reloader.stakater.com/reload": context.appName+"."+context.name+".dapr"    }
+        metadata: {
+            annotations: {
+                "secret.reloader.stakater.com/reload": context.appName+"."+context.name+".dapr"    
+            }
         }
-
         // +patchKey=name
+        spec: selector: matchLabels: {
+                    for _, n in parameter.networks {
+                        "participant.edgefarm.io/\(n)": "\(n)"
+                    }
+        }
+        spec: template:  metadata: {
+            labels: {
+                for _, n in parameter.networks {
+                    "participant.edgefarm.io/\(n)": "\(n)"
+                }
+            }
+        }
         spec: template: spec: {
             volumes: [
                 {
                     name: "creds",
                     secret:
                         secretName: context.appName+"."+context.name
+                },
+                {
+                    name: "resolv", 
+                    hostPath:
+                        path: "/etc/resolv.conf"
+                        type: "File"
                 },
                 {
                     name: "dapr-components", 
@@ -56,34 +75,34 @@ template: {
                                     "mountPath": "/nats-credentials"
                                 }]
                             },
-                            {
-                                "name":  "dapr",
-                                "image": "daprio/daprd:nightly-2022-03-13",
-                                "command":  [
-                                    "./daprd", 
-                                    "--dapr-grpc-port", 
-                                    "3500", 
-                                    "--components-path", 
-                                    "/components", 
-                                    "--dapr-http-port", 
-                                    "3501", 
-                                    "--app-port", 
-                                    "50001", 
-                                    "--app-protocol", 
-                                    parameter.daprProtocol, 
-                                    "--app-id",
-                                    context.name,
-                                    "--log-level", 
-                                    "debug"
-                                ],
-                                "volumeMounts": [
-                                    {
-                                        "name": "dapr-components",
-                                        "mountPath": "/components",
-                                        "readOnly": true
-                                    }
-                                ]
-                            }
+                        {
+                            "name":  "dapr",
+                            "image": "daprio/daprd:nightly-2022-03-13",
+                            "command":  [
+                                "./daprd", 
+                                "--dapr-grpc-port", 
+                                "3500", 
+                                "--components-path", 
+                                "/components", 
+                                "--dapr-http-port", 
+                                "3501", 
+                                "--app-port", 
+                                "50001", 
+                                "--app-protocol", 
+                                parameter.daprProtocol, 
+                                "--app-id",
+                                context.name,
+                                "--log-level", 
+                                "debug"
+                            ],
+                            "volumeMounts": [
+                                {
+                                    "name": "dapr-components",
+                                    "mountPath": "/components",
+                                    "readOnly": true
+                                }
+                            ]
+                        }
                         ]
         }
     }
