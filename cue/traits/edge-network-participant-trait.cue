@@ -124,9 +124,7 @@ template: {
                                 "--app-protocol", 
                                 parameter.daprProtocol, 
                                 "--app-id",
-                                context.name,
-                                "--log-level", 
-                                "debug"
+                                context.name
                             ],
                             "volumeMounts": [
                                 {
