@@ -58,6 +58,12 @@ template: {
                         secretName: context.appName+"."+context.name
                 },
                 {
+                    name: "resolv", 
+                    hostPath:
+                        path: "/etc/resolv.conf"
+                        type: "File"
+                },
+                {
                     name: "dapr-components", 
                     secret:
                         secretName: context.appName+"."+context.name+".dapr"
@@ -130,6 +136,11 @@ template: {
                                 {
                                     "name": "dapr-components",
                                     "mountPath": "/components",
+                                    "readOnly": true
+                                },
+                                {
+                                    "name": "resolv",
+                                    "mountPath": "/etc/resolv.conf",
                                     "readOnly": true
                                 }
                             ]
