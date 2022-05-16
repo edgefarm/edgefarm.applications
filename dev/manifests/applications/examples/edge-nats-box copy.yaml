@@ -1,0 +1,64 @@
+---
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: nats-box
+  namespace: nats-box
+spec:
+  components:
+    - name: nats-box
+      type: edge-worker
+      properties:
+        image: natsio/nats-box:latest
+        name: nats-box
+        runtime:
+          - mydevice
+        command:
+          - /bin/sh
+          - -c
+          - --
+        args:
+          - "while true; do sleep 1; done;"
+      traits:
+        - type: edge-network-participant
+          properties:
+            networks:
+              - nats-box-network
+
+    - type: application-network
+      name: nats-box-network
+      properties:
+        subjects:
+          - name: data-on-leaf
+            subjects:
+              - "data.>"
+            stream: mystream
+          - name: cloudsubjects
+            subjects:
+              - "cloud.>"
+            stream: cloudstream
+        streams:
+          - name: mystream
+            location: node
+            config:
+              storage: file
+              maxBytes: 30000000
+              discard: old
+          - name: cloudstream
+            location: main
+            config:
+              storage: file
+              maxBytes: 30000000
+              discard: old
+          - name: mystream_aggregate
+            location: main
+            link:
+              stream: mystream
+            config:
+              storage: file
+              discard: old
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nats-box

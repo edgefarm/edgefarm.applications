@@ -83,8 +83,6 @@ spec:
         					parameter.daprProtocol,
         					"--app-id",
         					context.name,
-        					"--log-level",
-        					"debug",
         				]
         				volumeMounts: [
         					{
