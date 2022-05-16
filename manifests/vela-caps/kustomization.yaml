@@ -10,4 +10,5 @@ resources:
   - ./traits/env-trait.yaml
   - ./traits/labels-trait.yaml
   - ./traits/resource-trait.yaml
-  - ./traits/network-participant-trait.yaml
+  - ./traits/edge-network-participant-trait.yaml
+  - ./traits/cloud-network-participant-trait.yaml
