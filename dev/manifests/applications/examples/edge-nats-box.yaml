@@ -10,6 +10,8 @@ spec:
       type: edge-worker
       properties:
         image: natsio/nats-box:latest
+        imagePullSecrets:
+          - mysecret
         name: nats-box
         runtime:
           - mydevice
@@ -19,6 +21,15 @@ spec:
           - --
         args:
           - "while true; do sleep 1; done;"
+        securityContext:
+          privileged: false
+          capabilities:
+            add:
+              - CAP_SYS_RAWIO
+              - CAP_NET_ADMIN
+            drop:
+              - CAP_KILL
+
       traits:
         - type: edge-network-participant
           properties:
