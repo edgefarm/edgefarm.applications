@@ -79,6 +79,10 @@ template: {
 							if parameter["readinessProbe"] != _|_ {
 								readinessProbe: parameter.readinessProbe
 							}
+
+							if parameter["securityContext"] != _|_ {
+								securityContext: parameter.securityContext								
+							}
 						}
 
 					]
@@ -131,6 +135,27 @@ template: {
 
 		// +usage=Args to run for the command
 		args?: [...string]
+
+		// +usage=Specifies the SecurityContext of the container
+		securityContext?: {
+			allowPrivilegeEscalation?: bool
+			capabilities?: {
+				add?: [...string]
+				drop?: [...string]
+			}
+			privileged?: bool
+			// procMount currently ununsed
+			// procMount?: string
+			readOnlyRootFilesystem?: bool
+			runAsGroup?: int
+			runAsNonRoot?: bool
+			runAsUser?: int
+			// seLinuxOptions currently ununsed
+			// seLinuxOptions?: {...}
+			// seccompProfile currently ununsed
+			// seccompProfile?: {}
+			// windowsOptions never used
+		}
 
 		// +usage=Define arguments by using environment variables
 		env?: [...{
