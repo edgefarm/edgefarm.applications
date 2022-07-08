@@ -81,6 +81,12 @@ template: {
                                     {
                                         "name": "DAPR_HTTP_ADDRESS",
                                         "value": "localhost:3501"
+                                    },
+                                    {
+                                        "name": "NODE_NAME",
+                                        "valueFrom":
+                                            "fieldRef":
+                                            "fieldPath": "spec.nodeName"
                                     }
                                 ],
                                 "volumeMounts": [
