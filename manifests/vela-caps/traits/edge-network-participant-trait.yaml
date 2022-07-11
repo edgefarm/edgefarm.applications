@@ -89,7 +89,7 @@ spec:
         		},
         			{
         				name:  "nats-leafnode-sidecar"
-        				image: "ci4rail/nats-leafnode-client:972bd5b3"
+        				image: "ghcr.io/edgefarm/nats-leafnode-client:v0.2.0-beta.1"
         				command: ["/bin/sh", "-c", "env && echo $REMOTE && /client --remote $REMOTE --natsuri nats://leaf-nats.nats:4222 --creds /creds --component " + context.name]
         				env: [
         					{
