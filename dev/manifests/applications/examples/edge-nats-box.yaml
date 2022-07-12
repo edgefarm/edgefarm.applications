@@ -10,8 +10,6 @@ spec:
       type: edge-worker
       properties:
         image: natsio/nats-box:latest
-        imagePullSecrets:
-          - mysecret
         name: nats-box
         runtime:
           - mydevice

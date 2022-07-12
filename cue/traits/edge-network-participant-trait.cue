@@ -98,7 +98,7 @@ template: {
                             },
                             {
                             "name":  "nats-leafnode-sidecar",
-                            "image": "ghcr.io/edgefarm/nats-leafnode-client:v0.2.0-beta.1",
+                            "image": "ghcr.io/edgefarm/nats-leafnode-client:0.2.0-beta.1",
                             "command":  ["/bin/sh", "-c", "env && echo $REMOTE && /client --remote $REMOTE --natsuri nats://leaf-nats.nats:4222 --creds /creds --component "+context.name],
                             "env": [
                                 {
