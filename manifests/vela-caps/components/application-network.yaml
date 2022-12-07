@@ -49,11 +49,10 @@ spec:
         	streams: [...{
         		// +usage=name defines the name of the stream
         		name: string
-        		// +usage=location defines where the stream is located
-        		// +usage=Allowed values are: node, main
+        		// +usage=location defines where the stream is located. Allowed values are: node, main
         		// +required
         		// +default="node"
-        		location: string
+        		location: string | *"node"
         		// +usage=link defines if the stream is linked to another stream
         		link?: {
         			// +usage=stream defines the name of the linked stream
@@ -61,31 +60,30 @@ spec:
         		}
         		// +usage=config defines the configuration of the stream
         		config: {
-        			// +usage=Streams are stored on the server, this can be one of many backends and all are usable in clustering mode.
-        			// +usage=Allowed values are: file, memory
-        			storage?: string
-        			// +usage=Messages are retained either based on limits like size and age (Limits), as long as there are Consumers (Interest) or until any worker processed them (Work Queue)
-        			// +usage=Allowed values are: limits, interest, workqueue
+        			// +usage=Streams are stored on the server, this can be one of many backends and all are usable in clustering mode. Allowed values are: file, memory
+        			// +default="file"
+        			storage?: string | *"file"
+        			// +usage=Messages are retained either based on limits like size and age (Limits), as long as there are Consumers (Interest) or until any worker processed them (Work Queue). Allowed values are: limits, interest, workqueue
         			// +default="limits"
-        			retention?: string
+        			retention?: string | *"limits"
         			// +usage=MaxMsgsPerSubject defines the amount of messages to keep in the store for this Stream per unique subject, when exceeded oldest messages are removed, -1 for unlimited.
         			// +default=-1
-        			maxMsgsPerSubject?: int64
+        			maxMsgsPerSubject?: int64 | *-1
         			// +usage=MaxMsgs defines the amount of messages to keep in the store for this Stream, when exceeded oldest messages are removed, -1 for unlimited.
         			// +default=-1
-        			maxMsgs?: int64
+        			maxMsgs?: int64 | *-1
         			// +usage=MaxBytes defines the combined size of all messages in a Stream, when exceeded oldest messages are removed, -1 for unlimited.
         			// +default=-1
-        			maxBytes?: int64
+        			maxBytes?: int64 | *-1
         			// +usage=MaxAge defines the oldest messages that can be stored in the Stream, any messages older than this period will be removed, -1 for unlimited. Supports units (s)econds, (m)inutes, (h)ours, (d)ays, (M)onths, (y)ears.
         			// +default="1y"
-        			maxAge?: string
+        			maxAge?: string | *"1y"
         			// +usage=MaxMsgSize defines the maximum size any single message may be to be accepted by the Stream.
         			// +default=-1
-        			maxMsgSize?: int64
-        			// +usage=
+        			maxMsgSize?: int64 | *-1
+        			// +usage=Discard defines which messages shall be dropped. Allowed values are: old, new
         			// +default="old"
-        			discard?: string
+        			discard?: string | *"old"
         		}
         	}]
         }

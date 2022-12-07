@@ -5,7 +5,7 @@ This repository contains the source of the edgefarm.applications custom resource
 `edgefarm.applications` contains the following resources:
 - `edge-worker` (application runtime running on a edge node)
 - `main-worker` (application runtime running in the cloud)
-- `application-network` (specifies the network connection to `edgefarm.network`)
+- `application-network` (specifies the network connection to ``EdgeFarm.network``)
 
 ## Examples
 

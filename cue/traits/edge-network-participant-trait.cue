@@ -16,7 +16,7 @@ template: {
                 apiVersion: "network.edgefarm.io/v1alpha1"
                 kind:       "Participants"
                 metadata: {
-                    name: context.appName + "." + n + "." + context.name 
+                    name: context.appName + "." + n + "." + context.name
                     namespace: context.namespace
                 }
                 spec: {
@@ -31,7 +31,7 @@ template: {
     patch: {
         metadata: {
             annotations: {
-                "secret.reloader.stakater.com/reload": context.appName+"."+context.name+".dapr"    
+                "secret.reloader.stakater.com/reload": context.appName+"."+context.name+".dapr"
             }
         }
         // +patchKey=name
@@ -58,13 +58,13 @@ template: {
                         secretName: context.appName+"."+context.name
                 },
                 {
-                    name: "resolv", 
+                    name: "resolv",
                     hostPath:
                         path: "/etc/resolv.conf"
                         type: "File"
                 },
                 {
-                    name: "dapr-components", 
+                    name: "dapr-components",
                     secret:
                         secretName: context.appName+"."+context.name+".dapr"
                 }
@@ -98,8 +98,8 @@ template: {
                             },
                             {
                             "name":  "nats-leafnode-sidecar",
-                            "image": "ghcr.io/edgefarm/nats-leafnode-client:0.2.0-beta.1",
-                            "command":  ["/bin/sh", "-c", "env && echo $REMOTE && /client --remote $REMOTE --natsuri nats://leaf-nats.nats:4222 --creds /creds --component "+context.name],
+                            "image": "ghcr.io/edgefarm/nats-leafnode-client:pr-28",
+                            "command":  ["/bin/sh", "-c", "env && echo $REMOTE && /client --remote $REMOTE --natsuri nats://172.17.0.1:4222 --creds /creds --component "+context.name],
                             "env": [
                                 {
                                     "name": "REMOTE",
@@ -122,19 +122,19 @@ template: {
                         },
                         {
                             "name":  "dapr",
-                            "image": "daprio/daprd:nightly-2022-03-13",
+                            "image": "daprio/daprd:1.9.5",
                             "command":  [
-                                "./daprd", 
-                                "--dapr-grpc-port", 
-                                "3500", 
-                                "--components-path", 
-                                "/components", 
-                                "--dapr-http-port", 
-                                "3501", 
-                                "--app-port", 
-                                "50001", 
-                                "--app-protocol", 
-                                parameter.daprProtocol, 
+                                "./daprd",
+                                "--dapr-grpc-port",
+                                "3500",
+                                "--components-path",
+                                "/components",
+                                "--dapr-http-port",
+                                "3501",
+                                "--app-port",
+                                "50001",
+                                "--app-protocol",
+                                parameter.daprProtocol,
                                 "--app-id",
                                 context.name
                             ],
