@@ -7,7 +7,7 @@ metadata:
   name: edge-network-participant
 spec:
   appliesToWorkloads:
-    - "*"
+    - '*'
   podDisruptive: true
   schematic:
     cue:
@@ -148,3 +148,4 @@ spec:
         	// +usage=Define, which protocol to use for dapr subscriptions, options: "grpc", "http". Defaults to "grpc".
         	daprProtocol: *"grpc" | "http"
         }
+
