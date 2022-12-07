@@ -7,7 +7,7 @@ metadata:
   name: edge-network-participant
 spec:
   appliesToWorkloads:
-    - '*'
+    - "*"
   podDisruptive: true
   schematic:
     cue:
@@ -89,8 +89,8 @@ spec:
         		},
         			{
         				name:  "nats-leafnode-sidecar"
-        				image: "ghcr.io/edgefarm/nats-leafnode-client:0.2.0-beta.1"
-        				command: ["/bin/sh", "-c", "env && echo $REMOTE && /client --remote $REMOTE --natsuri nats://leaf-nats.nats:4222 --creds /creds --component " + context.name]
+        				image: "ghcr.io/edgefarm/nats-leafnode-client:pr-28"
+        				command: ["/bin/sh", "-c", "env && echo $REMOTE && /client --remote $REMOTE --natsuri nats://172.17.0.1:4222 --creds /creds --component " + context.name]
         				env: [
         					{
         						name: "REMOTE"
@@ -111,7 +111,7 @@ spec:
         			},
         			{
         				name:  "dapr"
-        				image: "daprio/daprd:nightly-2022-03-13"
+        				image: "daprio/daprd:1.9.5"
         				command: [
         					"./daprd",
         					"--dapr-grpc-port",
@@ -148,4 +148,3 @@ spec:
         	// +usage=Define, which protocol to use for dapr subscriptions, options: "grpc", "http". Defaults to "grpc".
         	daprProtocol: *"grpc" | "http"
         }
-
