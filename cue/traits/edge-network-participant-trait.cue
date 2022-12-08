@@ -98,7 +98,7 @@ template: {
                             },
                             {
                             "name":  "nats-leafnode-sidecar",
-                            "image": "ghcr.io/edgefarm/nats-leafnode-client:pr-28",
+                            "image": "ghcr.io/edgefarm/nats-leafnode-client:0.2.0-beta.2",
                             "command":  ["/bin/sh", "-c", "env && echo $REMOTE && /client --remote $REMOTE --natsuri nats://172.17.0.1:4222 --creds /creds --component "+context.name],
                             "env": [
                                 {
@@ -112,6 +112,13 @@ template: {
                                     }
                                 }
                             ],
+                            "lifecycle": {
+                                "preStop": {
+                                    "exec": {
+                                        "command": ["/bin/sh", "-c", "kill -SIGUSR1 1"]
+                                    }
+                                }
+                            },
                             "volumeMounts": [
                                 {
                                     "name": "creds",
