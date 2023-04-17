@@ -5,7 +5,7 @@ kind: Kustomization
 helmCharts:
 - name: vela-minimal
   namespace: default
-  version: 1.1.8
+  version: 1.8.0
   repo: https://charts.kubevela.net/core
   releaseName: kubevela
   includeCRDs: true
