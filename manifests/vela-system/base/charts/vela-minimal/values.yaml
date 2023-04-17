@@ -9,7 +9,7 @@ applyOnceOnly: "off"
 disableCaps: "manualscalertrait,containerizedwokrload,envbinding"
 image:
   repository: oamdev/vela-core
-  tag: v1.1.8
+  tag: v1.8.0
   pullPolicy: Always
 
 imagePullSecrets: []
