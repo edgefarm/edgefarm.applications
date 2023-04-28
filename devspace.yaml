@@ -1,6 +1,20 @@
 version: v2beta1
 name: edgefarm-applications
 
+commands:
+  help: |-
+    #!/bin/bash
+    set -e
+    GREEN='\033[0;32m'
+    BRED='\033[3;31m'
+    BGREEN='\033[1;32m'
+    GREY='\033[0;36m'
+    BOLD='\033[1m'
+    NC='\033[0m' # No Color
+    echo -e "${BGREEN}Usage of ${BRED}edgefarm.core:${NC}"
+    echo -e "${GREEN} EdgeFarm related commands:${NC}"
+    echo -e "${BOLD}  devspace run-pipeline deploy                    ${GREY}Deploy the edgefarm.applications stack${NC}"
+
 functions:
   wait_for_deployment: |-
     #!/bin/bash

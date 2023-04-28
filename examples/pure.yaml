@@ -1,0 +1,18 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: pure
+spec:
+  components:
+    - name: pure
+      type: edgefarm-applications
+      properties:
+        image: bash:5.1-alpine3.17
+        nodepoolSelector:
+          matchLabels:
+            app/pure: ""
+        name: pure
+        command:
+          - sh
+          - "-c"
+          - "sleep infinity"
