@@ -1,56 +1,42 @@
-version: v1beta11
+version: v2beta1
+name: edgefarm-applications
+
+functions:
+  wait_for_deployment: |-
+    #!/bin/bash
+    set -e
+    echo "wait for deployment/$1 (ns: $2)"
+    until kubectl wait --for=condition=available deployment/$1 -n $2 --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+
+pipelines:
+  deploy: |
+    run_pipelines deploy-vela-core
+    run_pipelines deploy-vela-caps
+
+  deploy-vela-core: |-
+    #!/bin/bash
+    set -e
+    create_deployments vela-system
+    wait_for_deployment kubevela-cluster-gateway vela-system
+    wait_for_deployment kubevela-vela-core vela-system
+
+  deploy-vela-caps: |-
+    #!/bin/bash
+    set -e
+    create_deployments vela-caps
 
 deployments:
-  - name: vela-system
+  vela-system:
     kubectl:
       kustomize: true
       kustomizeArgs: ["--enable-helm"]
       manifests:
-        - ./dev/manifests/vela-system
+        - ./manifests/vela-system
     namespace: vela-system
 
-  - name: vela-caps
+  vela-caps:
     kubectl:
       kustomize: true
       manifests:
-        - ./dev/manifests/vela-caps
+        - ./manifests/vela-caps
     namespace: vela-system
-
-hooks:
-  - name: update-caps
-    command: make render
-    events: ["before:deploy:vela-caps"]
-
-profiles:
-  - name: user
-    activation:
-      - env:
-          ENV: "user"
-    patches:
-      - op: add
-        path: "/deployments"
-        value:
-          name: cloud-app
-          kubectl:
-            kustomize: true
-            manifests:
-              - ./dev/manifests/applications/cloud-app
-          namespace: cloud-app
-      - op: add
-        path: "/deployments"
-        value:
-          name: mixed-app
-          kubectl:
-            kustomize: true
-            manifests:
-              - ./dev/manifests/applications/mixed-app
-          namespace: mixed-app
-      - op: add
-        path: "/deployments"
-        value:
-          name: mixed-app-network
-          kubectl:
-            kustomize: true
-            manifests:
-              - ./dev/manifests/applications/mixed-app-network
-          namespace: mixed-app-network

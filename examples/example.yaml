@@ -1,0 +1,35 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: myapp
+spec:
+  components:
+    - name: myapp
+      type: edgefarm-applications
+      properties:
+        image: natsio/nats-box:latest
+        nodepoolSelector:
+          matchLabels:
+            mynetwork-big: ""
+        name: myapp
+        command:
+          - sh
+          - "-c"
+          - "sleep infinity"
+      traits:
+        - type: edgefarm-network
+          properties:
+            network:
+              name: mynetwork
+              subnetwork: big
+              user: bigonly
+        - type: edgefarm-storage
+          properties:
+            configMap:
+              - name: mycm
+                data:
+                  foo: bar
+                mountPath: /mypath
+            emptyDir:
+              - name: test1
+                mountPath: /test/mount/emptydir

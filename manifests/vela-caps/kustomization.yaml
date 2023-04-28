@@ -3,13 +3,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ./components/application-network.yaml
-  - ./components/edge-worker.yaml
-  - ./components/cloud-worker.yaml
-  - ./traits/cloud-network-participant-trait.yaml
-  - ./traits/configmap-trait.yaml
-  - ./traits/edge-network-participant-trait.yaml
-  - ./traits/env-trait.yaml
-  - ./traits/labels-trait.yaml
-  - ./traits/resource-trait.yaml
-  - ./traits/volume-trait.yaml
+  - ./components/edgefarm-applications.yaml
+  - ./traits/edgefarm-network-trait.yaml
+  - ./traits/edgefarm-storage-trait.yaml
