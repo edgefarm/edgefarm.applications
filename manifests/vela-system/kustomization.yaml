@@ -6,4 +6,4 @@ resources:
   - "./base"
 
 patches:
- - delete-caps.yaml
+  - delete-caps.yaml

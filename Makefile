@@ -1,53 +1,40 @@
-
-
 all: render deploy ## renders and deploys all templates into the current k8s cluster
-
-render: edge-worker-render cloud-worker-render app-network-render traits-render ## renders all templates
-deploy: edge-worker-deploy cloud-worker-deploy app-network-deploy traits-deploy ## deploys all templates
+render: traits-render components-render ## renders all templates
+apply: traits-apply components-apply ## applies all templates
+deploy: traits-deploy components-deploy ## deploys all templates
 
 test: ## test example, e.g. `make test dev/manifests/applications/some-app.yaml`
 	@vela dry-run -f $(filter-out $@,$(MAKECMDGOALS))
 
-traits-render: 
-	@vela def vet ./cue/traits/volume-trait.cue
-	@vela def render ./cue/traits/volume-trait.cue -o manifests/vela-caps/traits/volume-trait.yaml
+traits-render: ## renders all traits
+	@vela def vet cue/traits/edgefarm-network-trait.cue
+	@vela def render cue/traits/edgefarm-network-trait.cue -o manifests/vela-caps/traits/edgefarm-network-trait.yaml
+	@vela def vet cue/traits/edgefarm-storage-trait.cue
+	@vela def render cue/traits/edgefarm-storage-trait.cue -o manifests/vela-caps/traits/edgefarm-storage-trait.yaml
 
-traits-deploy: 
-	@vela def apply ./cue/traits/volume-trait.cue
+traits-apply: ## applies all traits using vela cli
+	@vela def apply cue/traits/edgefarm-network-trait.cue
+	@vela def apply cue/traits/edgefarm-storage-trait.cue
 
-edge-worker-render: ## renders the edge-worker crd
-	@vela def vet ./cue/components/edge-worker.cue
-	vela def render ./cue/components/edge-worker.cue -o manifests/vela-caps/components/edge-worker.yaml
+traits-deploy: ## deploys all traits using kubectl
+	kubectl apply -n vela-system -f manifests/vela-caps/traits/edgefarm-network-trait.yaml
+	kubectl apply -n vela-system -f manifests/vela-caps/traits/edgefarm-storage-trait.yaml
 
-edge-worker-deploy: ## deploys the edge-worker crd into the current k8s cluster
-	@vela def apply ./cue/components/edge-worker.cue
+components-render: ## renders all components
+	@vela def vet cue/components/edgefarm-applications.cue
+	@vela def render cue/components/edgefarm-applications.cue -o manifests/vela-caps/components/edgefarm-applications.yaml
+components-apply: ## applies all components using vela cli
+	@vela def apply cue/components/edgefarm-applications.cue
+components-deploy: ## deploys all components using kubectl
+	kubectl apply -n vela-system -f manifests/vela-caps/components/edgefarm-applications.yaml
 
-cloud-worker-render: ## renders the cloud-worker crd
-	@vela def vet ./cue/components/cloud-worker.cue
-	vela def render ./cue/components/cloud-worker.cue -o manifests/vela-caps/components/cloud-worker.yaml
-
-cloud-worker-deploy: ## deploys the cloud-worker crd into the current k8s cluster
-	@vela def apply ./cue/components/cloud-worker.cue
-
-app-network-render: ## renders the app-network crd
-	@vela def vet ./cue/components/application-network.cue
-	@vela def vet ./cue/traits/cloud-network-participant-trait.cue
-	@vela def vet ./cue/traits/edge-network-participant-trait.cue
-	vela def render  cue/components/application-network.cue -o manifests/vela-caps/components/application-network.yaml 
-	vela def render  cue/traits/cloud-network-participant-trait.cue -o manifests/vela-caps/traits/cloud-network-participant-trait.yaml
-	vela def render  cue/traits/edge-network-participant-trait.cue -o manifests/vela-caps/traits/edge-network-participant-trait.yaml
-
-app-network-deploy: ## deploys the app-network crd into the current k8s cluster
-	@vela def apply ./cue/components/application-network.cue
-	@vela def apply ./cue/traits/cloud-network-participant-trait.cue
-	@vela def apply ./cue/traits/edge-network-participant-trait.cue
 
 install-vela: ## install kubevela
-	@VELA_VERSION=v1.2.4
+	@VELA_VERSION=v1.8.0
 	@curl -fsSl https://kubevela.io/script/install.sh | bash -s ${VELA_VERSION}
 	@vela install
 
 help: ## show help message
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make [target]\033[36m\033[0m\n"} /^[$$()% 0-9a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m\t %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-.PHONY: all test deploy edge-worker-render cloud-worker-render app-network-render edge-worker-deploy cloud-worker-deploy app-network-deploy install-vela help
+.PHONY: all render apply deploy traits-render traits-apply traits-deploy components-render components-apply components-deploy install-vela help
