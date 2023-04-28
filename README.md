@@ -2,14 +2,9 @@
 
 This repository contains the source of the edgefarm.applications custom resource definitions. The crds are defined [CUElang](https://cuelang.org/docs/) and generated using [kubevela](https://kubevela.io/docs/). 
 
-`edgefarm.applications` contains the following resources:
-- `edge-worker` (application runtime running on a edge node)
-- `main-worker` (application runtime running in the cloud)
-- `application-network` (specifies the network connection to ``EdgeFarm.network``)
-
 ## Examples
 
-See the [dev/manifests/applications/examples](dev/manifests/applications/examples/README.md) directory for example manifests.
+See the `examples/` directory for example manifests.
 
 ## Development
 
@@ -21,14 +16,15 @@ Usage:
   make [target]
   all                     renders and deploys all templates into the current k8s cluster
   render                  renders all templates
+  apply                   applies all templates
   deploy                  deploys all templates
   test                    test example, e.g. `make test dev/manifests/applications/some-app.yaml`
-  edge-worker-render      renders the edge-worker crd
-  edge-worker-deploy      deploys the edge-worker crd into the current k8s cluster
-  main-worker-render      renders the main-worker crd
-  main-worker-deploy      deploys the main-worker crd into the current k8s cluster
-  app-network-render      renders the app-network crd
-  app-network-deploy      deploys the app-network crd into the current k8s cluster
+  traits-render           renders all traits
+  traits-apply            applies all traits using vela cli
+  traits-deploy           deploys all traits using kubectl
+  components-render       renders all components
+  components-apply        applies all components using vela cli
+  components-deploy       deploys all components using kubectl
   install-vela            install kubevela
   help                    show help message
 ```
@@ -42,7 +38,7 @@ The `make test` command takes an example yaml to test against the crd. This can 
 inspect the templating result and check if there are any errors in the resulting yaml.
 Example:
 ```
-$ make test dev/manifests/applications/cloud-app/cloud-app.yaml
+$ make test example/example.yaml
 ---
 # Application(cloud-app) -- Component(cloud-worker-1) 
 ---
