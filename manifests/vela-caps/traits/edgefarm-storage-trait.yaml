@@ -139,13 +139,15 @@ spec:
         	},
         ]
         patch: spec: workloadTemplate: deploymentTemplate: spec: template: spec: {
+        	// +patchKey=name
         	// +patchStrategy=retainKeys
         	volumes: deDupVolumesArray
 
+        	// +patchKey=name	
         	containers: [{
-        		name: context.name
-        		env:  envList
-        		// +patchStrategy=retainKeys
+        		// +patchKey=name
+        		env: envList
+        		// +patchKey=name
         		volumeMounts: volumeMountsList
         	}, ...]
         }

@@ -49,22 +49,22 @@ template: {
 							}
 							spec: {
 								if parameter.tolerations != _|_ {
-									tolerations: [
-										for k in parameter.tolerations {
-											if k.key != _|_ {
-												key: k.key
-											}
-											if k.effect != _|_ {
-												effect: k.effect
-											}
-											if k.value != _|_ {
-												value: k.value
-											}
-											operator: k.operator
-											if k.tolerationSeconds != _|_ {
-												tolerationSeconds: k.tolerationSeconds
-											}
-										}]
+								tolerations: [
+									for k in parameter.tolerations {
+										if k.key != _|_ {
+											key: k.key
+										}
+										if k.effect != _|_ {
+											effect: k.effect
+										}
+										if k.value != _|_ {
+											value: k.value
+										}
+										operator: k.operator
+										if k.tolerationSeconds != _|_ {
+											tolerationSeconds: k.tolerationSeconds
+										}
+									}]
 								}
 								containers: [{
 									name:  context.name

@@ -13,6 +13,7 @@ spec:
     cue:
       template: |
         patch: spec: workloadTemplate: deploymentTemplate: spec: template: spec: {
+        	// +patchKey=name
         	// +patchStrategy=retainKeys
         	volumes: [
         		{
@@ -20,7 +21,7 @@ spec:
         			secret: secretName: parameter.network.name + "-" + parameter.network.user
         		},
         		{
-        			name: "config"
+        			name: "config" + parameter.network.name + "-" + parameter.network.user
         			emptyDir: {}
         		},
         		{
@@ -42,7 +43,7 @@ spec:
         		name:            "init-dapr-network-" + parameter.network.name + "-" + context.namespace + "-" + parameter.network.subnetwork
         		volumeMounts: [{
         			mountPath: "/config/"
-        			name:      "config"
+        			name:      "config" + parameter.network.name + "-" + parameter.network.user
         		},
         			{
         				mountPath: "/secret"
@@ -98,7 +99,7 @@ spec:
         			]
         			volumeMounts: [
         				{
-        					name:      "config"
+        					name:      "config" + parameter.network.name + "-" + parameter.network.user
         					mountPath: "/config/"
         					readOnly:  true
         				},
