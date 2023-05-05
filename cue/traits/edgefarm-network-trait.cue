@@ -68,11 +68,11 @@ template: {
                 env: [
                     {
                         name: "DAPR_GRPC_ADDRESS",
-                        value: "localhost: \(parameter.daprGrpcPort)"
+                        value: "localhost:\(parameter.daprGrpcPort)"
                     },
                     {
                         name: "DAPR_HTTP_ADDRESS",
-                        value: "localhost: \(parameter.daprHttpPort)"
+                        value: "localhost:\(parameter.daprHttpPort)"
                     },
                     {
                         name: "NODE_NAME",
