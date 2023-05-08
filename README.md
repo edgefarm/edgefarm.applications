@@ -1,12 +1,12 @@
-[contributors-shield]: https://img.shields.io/github/contributors/edgefarm/edgefarm.application.svg?style=for-the-badge
-[contributors-url]: https://github.com/edgefarm/edgefarm.application/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/edgefarm/edgefarm.application.svg?style=for-the-badge
-[forks-url]: https://github.com/edgefarm/edgefarm.application/application/members
-[stars-shield]: https://img.shields.io/github/stars/edgefarm/edgefarm.application.svg?style=for-the-badge
-[stars-url]: https://github.com/edgefarm/edgefarm.application/stargazers
-[issues-shield]: https://img.shields.io/github/issues/edgefarm/edgefarm.application.svg?style=for-the-badge
-[issues-url]: https://github.com/edgefarm/edgefarm.application/issues
-[license-shield]: https://img.shields.io/github/license/edgefarm/edgefarm.application?logo=mit&style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/edgefarm/edgefarm.applications.svg?style=for-the-badge
+[contributors-url]: https://github.com/edgefarm/edgefarm.applications/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/edgefarm/edgefarm.applications.svg?style=for-the-badge
+[forks-url]: https://github.com/edgefarm/edgefarm.applications/application/members
+[stars-shield]: https://img.shields.io/github/stars/edgefarm/edgefarm.applications.svg?style=for-the-badge
+[stars-url]: https://github.com/edgefarm/edgefarm.applications/stargazers
+[issues-shield]: https://img.shields.io/github/issues/edgefarm/edgefarm.applications.svg?style=for-the-badge
+[issues-url]: https://github.com/edgefarm/edgefarm.applications/issues
+[license-shield]: https://img.shields.io/github/license/edgefarm/edgefarm.applications?logo=mit&style=for-the-badge
 [license-url]: https://opensource.org/licenses/AGPL-3.0
 
 [![Contributors][contributors-shield]][contributors-url]
@@ -18,7 +18,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/edgefarm/edgefarm.application">
+  <a href="https://github.com/edgefarm/edgefarm.applications">
     <img src="https://github.com/edgefarm/edgefarm/raw/beta/.images/EdgefarmLogoWithText.png" alt="Logo" height="112">
   </a>
 
