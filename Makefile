@@ -3,7 +3,7 @@ render: traits-render components-render ## renders all templates
 apply: traits-apply components-apply ## applies all templates
 deploy: traits-deploy components-deploy ## deploys all templates
 
-test: ## test example, e.g. `make test dev/manifests/applications/some-app.yaml`
+test: ## test example, e.g. `make test examples/pure.yaml`
 	@vela dry-run -f $(filter-out $@,$(MAKECMDGOALS))
 
 traits-render: ## renders all traits
@@ -37,4 +37,4 @@ install-vela: ## install kubevela
 help: ## show help message
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make [target]\033[36m\033[0m\n"} /^[$$()% 0-9a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m\t %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-.PHONY: all render apply deploy traits-render traits-apply traits-deploy components-render components-apply components-deploy install-vela help
+.PHONY: all render apply deploy traits-render traits-apply traits-deploy components-render components-apply components-deploy install-vela help test

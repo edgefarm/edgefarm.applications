@@ -1,3 +1,5 @@
+import "list"
+
 "edgefarm-applications": {
 	type: "component"
 	annotations: {}
@@ -11,6 +13,33 @@
 	}
 }
 template: {
+	predefinedTolerations: [
+		{
+			key: "edgefarm.io",
+			operator: "Exists",
+			effect: "NoSchedule"
+		}
+	]
+
+	parameterTolerations: [
+	if parameter.tolerations != _|_ {
+		for k in parameter.tolerations {
+				if k.key != _|_ {
+						key: k.key
+				}
+				if k.effect != _|_ {
+						effect: k.effect
+				}
+				if k.value != _|_ {
+						value: k.value
+				}
+				operator: k.operator
+				if k.tolerationSeconds != _|_ {
+						tolerationSeconds: k.tolerationSeconds
+				}
+		} 
+	}]
+
 	output: {
 		apiVersion: "apps.openyurt.io/v1alpha1"
 		kind:       "YurtAppDaemon"
@@ -48,24 +77,7 @@ template: {
 								}
 							}
 							spec: {
-								if parameter.tolerations != _|_ {
-								tolerations: [
-									for k in parameter.tolerations {
-										if k.key != _|_ {
-											key: k.key
-										}
-										if k.effect != _|_ {
-											effect: k.effect
-										}
-										if k.value != _|_ {
-											value: k.value
-										}
-										operator: k.operator
-										if k.tolerationSeconds != _|_ {
-											tolerationSeconds: k.tolerationSeconds
-										}
-									}]
-								}
+								tolerations: predefinedTolerations + parameterTolerations
 								containers: [{
 									name:  context.name
 									image: parameter.image

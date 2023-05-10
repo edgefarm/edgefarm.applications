@@ -16,10 +16,6 @@ spec:
           - sh
           - "-c"
           - "sleep infinity"
-        tolerations:
-          - key: "edgefarm.io"
-            operator: "Exists"
-            effect: "NoSchedule"
       traits:
         - type: edgefarm-network
           properties:

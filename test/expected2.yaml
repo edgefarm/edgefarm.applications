@@ -1,0 +1,63 @@
+---
+# Application(pure) -- Component(pure) 
+---
+
+apiVersion: apps.openyurt.io/v1alpha1
+kind: YurtAppDaemon
+metadata:
+  annotations: {}
+  labels:
+    app.oam.dev/appRevision: ""
+    app.oam.dev/component: pure
+    app.oam.dev/name: pure
+    app.oam.dev/namespace: default
+    app.oam.dev/resourceType: WORKLOAD
+    workload.oam.dev/type: edgefarm-applications
+  name: pure
+  namespace: default
+spec:
+  nodepoolSelector:
+    matchLabels:
+      app/pure: ""
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: pure
+      app.kubernetes.io/component: pure
+  workloadTemplate:
+    deploymentTemplate:
+      metadata:
+        labels:
+          app.kubernetes.io/app: pure
+          app.kubernetes.io/component: pure
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app.kubernetes.io/app: pure
+            app.kubernetes.io/component: pure
+        template:
+          metadata:
+            labels:
+              app.kubernetes.io/app: pure
+              app.kubernetes.io/component: pure
+          spec:
+            containers:
+            - command:
+              - sh
+              - -c
+              - sleep infinity
+              image: bash:5.1-alpine3.17
+              name: pure
+              resources: {}
+            tolerations:
+            - effect: NoSchedule
+              key: edgefarm.io
+              operator: Exists
+            - effect: NoSchedule
+              key: foo
+              operator: Exists
+
+---
+
+
+make: Nothing to be done for 'test/test2.yaml'.
