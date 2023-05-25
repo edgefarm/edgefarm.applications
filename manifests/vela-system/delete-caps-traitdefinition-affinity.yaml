@@ -1,0 +1,10 @@
+######################################
+# delete all TraitDefinitions
+######################################
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  namespace: vela-system
+  name: affinity

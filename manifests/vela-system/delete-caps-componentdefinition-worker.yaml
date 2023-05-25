@@ -1,0 +1,10 @@
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  namespace: vela-system
+  name: worker
+######################################
+# delete all PolicyDefinitions
+######################################

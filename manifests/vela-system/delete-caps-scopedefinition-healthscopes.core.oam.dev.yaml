@@ -1,0 +1,10 @@
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: ScopeDefinition
+metadata:
+  name: healthscopes.core.oam.dev
+  namespace: vela-system
+######################################
+# delete all Applications
+######################################

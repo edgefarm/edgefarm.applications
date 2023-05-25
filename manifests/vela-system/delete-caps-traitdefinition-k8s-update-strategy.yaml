@@ -1,0 +1,7 @@
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  namespace: vela-system
+  name: k8s-update-strategy

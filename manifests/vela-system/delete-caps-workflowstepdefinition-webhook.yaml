@@ -1,0 +1,10 @@
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkflowStepDefinition
+metadata:
+  namespace: vela-system
+  name: webhook
+######################################
+# delete all WorkloadDefinitions
+######################################

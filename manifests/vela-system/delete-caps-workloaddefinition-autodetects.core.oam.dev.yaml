@@ -1,0 +1,31 @@
+---
+$patch: delete
+apiVersion: core.oam.dev/v1beta1
+kind: WorkloadDefinition
+metadata:
+  namespace: vela-system
+  name: autodetects.core.oam.dev
+# ---
+# $patch: delete
+# apiVersion: core.oam.dev/v1beta1
+# kind: WorkloadDefinition
+# metadata:
+#   namespace: vela-system
+#   name: daemonsets.apps
+# ---
+# $patch: delete
+# apiVersion: core.oam.dev/v1beta1
+# kind: WorkloadDefinition
+# metadata:
+#   namespace: vela-system
+#   name: deployments.apps
+# ---
+# $patch: delete
+# apiVersion: core.oam.dev/v1beta1
+# kind: WorkloadDefinition
+# metadata:
+#   namespace: vela-system
+#   name: jobs.batch
+######################################
+# delete all ComponentDefinitions
+######################################
