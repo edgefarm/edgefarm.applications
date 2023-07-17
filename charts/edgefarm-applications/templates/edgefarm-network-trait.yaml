@@ -1,0 +1,62 @@
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: edgefarm-network
+  labels:
+  {{- include "edgefarm-applications.labels" . | nindent 4 }}
+  annotations:
+    definition.oam.dev/description: Add edgefarm.network participation to a edgefarm.applications
+      workload
+spec:
+  appliesToWorkloads:
+  - yurtappdaemons.apps
+  podDisruptive: true
+  schematic:
+    cue:
+      template: "patch: spec: workloadTemplate: deploymentTemplate: {\n\tmetadata:
+        annotations: \"reloader.stakater.com/auto\": \"true\"\n\tspec: template: spec:
+        {\n\t\t// +patchKey=name\n\t\t// +patchStrategy=retainKeys\n\t\tvolumes: [\n\t\t\t{\n\t\t\t\tname:
+        \"secret-\" + parameter.network.name + \"-\" + parameter.network.user\n\t\t\t\tsecret:
+        secretName: parameter.network.name + \"-\" + parameter.network.user\n\t\t\t},\n\t\t\t{\n\t\t\t\tname:
+        \"config\" + parameter.network.name + \"-\" + parameter.network.user\n\t\t\t\temptyDir:
+        {}\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: \"dapr-resiliency\"\n\t\t\t\tconfigMap:
+        name: \"resiliency-\" + parameter.network.name + \"-\" + parameter.network.user
+        + \"-\" + context.name\n\t\t\t},\n\t\t]\n\t\tinitContainers: [{\n\t\t\tcommand:
+        [\"sh\", \"-c\", \"cp /secret/dapr /config/streams.yaml && sed -i \\\"s#localhost#$SUBNETWORK_SVC_ADDRESS.$SUBNETWORK_NAMESPACE#g\\\"
+        /config/streams.yaml && cat /config/streams.yaml && cp /resiliency-config/resiliency.yaml
+        /config/resiliency.yaml\"]\n\t\t\tenv: [{\n\t\t\t\tname:  \"SUBNETWORK_SVC_ADDRESS\"\n\t\t\t\tvalue:
+        parameter.network.name + \"-\" + context.namespace + \"-\" + parameter.network.subnetwork\n\t\t\t},
+        {\n\t\t\t\tname: \"SUBNETWORK_NAMESPACE\"\n\t\t\t\tvalueFrom: fieldRef: fieldPath:
+        \"metadata.namespace\"\n\t\t\t}]\n\t\t\timage:           \"bash:5.1-alpine3.17\"\n\t\t\timagePullPolicy:
+        \"IfNotPresent\"\n\t\t\tname:            \"init-dapr-network-\" + parameter.network.name
+        + \"-\" + context.namespace + \"-\" + parameter.network.subnetwork\n\t\t\tvolumeMounts:
+        [{\n\t\t\t\tmountPath: \"/config/\"\n\t\t\t\tname:      \"config\" + parameter.network.name
+        + \"-\" + parameter.network.user\n\t\t\t},\n\t\t\t\t{\n\t\t\t\t\tmountPath:
+        \"/secret\"\n\t\t\t\t\tname:      \"secret-\" + parameter.network.name + \"-\"
+        + parameter.network.user\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\tmountPath: \"/resiliency-config\"\n\t\t\t\t\tname:
+        \     \"dapr-resiliency\"\n\t\t\t\t}]\n\t\t}]\n\t\t// +patchKey=name\n\t\tcontainers:
+        [{\n\t\t\tname: context.name\n\t\t\t// +patchStrategy=retainKeys\n\t\t\tvolumeMounts:
+        [{\n\t\t\t\tname:      \"secret-\" + parameter.network.name + \"-\" + parameter.network.user\n\t\t\t\tmountPath:
+        \"/creds/network.creds\"\n\t\t\t\tsubPath:   \"creds\"\n\t\t\t\treadOnly:
+        \ true\n\t\t\t}]\n\t\t\tenv: [\n\t\t\t\t{\n\t\t\t\t\tname:  \"DAPR_GRPC_ADDRESS\"\n\t\t\t\t\tvalue:
+        \"localhost:\\(parameter.daprGrpcPort)\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\tname:
+        \ \"DAPR_HTTP_ADDRESS\"\n\t\t\t\t\tvalue: \"localhost:\\(parameter.daprHttpPort)\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\tname:
+        \"NODE_NAME\"\n\t\t\t\t\tvalueFrom: fieldRef: fieldPath: \"spec.nodeName\"\n\t\t\t\t},\n\t\t\t]\n\t\t},\n\t\t\t{\n\t\t\t\tname:
+        \ \"dapr\"\n\t\t\t\timage: \"daprio/daprd:1.10.5\"\n\t\t\t\tcommand: [\n\t\t\t\t\t\"./daprd\",\n\t\t\t\t\t\"--dapr-grpc-port\",\n\t\t\t\t\t\"\\(parameter.daprGrpcPort)\",\n\t\t\t\t\t\"--components-path\",\n\t\t\t\t\t\"/config\",\n\t\t\t\t\t\"--dapr-http-port\",\n\t\t\t\t\t\"\\(parameter.daprHttpPort)\",\n\t\t\t\t\t\"--app-port\",\n\t\t\t\t\t\"\\(parameter.daprAppPort)\",\n\t\t\t\t\t\"--app-protocol\",\n\t\t\t\t\tparameter.daprProtocol,\n\t\t\t\t\t\"--app-id\",\n\t\t\t\t\tcontext.name,\n\t\t\t\t]\n\t\t\t\tvolumeMounts:
+        [\n\t\t\t\t\t{\n\t\t\t\t\t\tname:      \"config\" + parameter.network.name
+        + \"-\" + parameter.network.user\n\t\t\t\t\t\tmountPath: \"/config/\"\n\t\t\t\t\t\treadOnly:
+        \ true\n\t\t\t\t\t},\n\t\t\t\t]\n\t\t\t}]\n\t}\n}\noutputs: \"resiliency-dapr-component\":
+        {\n\tapiVersion: \"v1\"\n\tkind:       \"ConfigMap\"\n\tmetadata: name: \"resiliency-\"
+        + parameter.network.name + \"-\" + parameter.network.user + \"-\" + context.name\n\tdata:
+        \"resiliency.yaml\": \"\"\"\n\t\tapiVersion: dapr.io/v1alpha1\n\t\tkind: Resiliency\n\t\tmetadata:\n\t\tname:
+        streams\n\t\tspec:\n\t\tpolicies:\n\t\t    retries:\n\t\t    retryForever:\n\t\t
+        \       policy: exponential\n\t\t        maxInterval: 15s\n\t\t        maxRetries:
+        -1\n\t\t    circuitBreakers:\n\t\t    pubsubCB:\n\t\t        maxRequests:
+        1\n\t\t        interval: 8s\n\t\t        timeout: 45s\n\t\t        trip: consecutiveFailures
+        > 1\n\t\ttargets:\n\t\t    components:\n\t\t    streams:\n\t\t        outbound:\n\t\t
+        \       retry: retryForever\n\t\t        circuitBreaker: simpleCB\n\t\t    pubsub1:\n\t\t
+        \       outbound:\n\t\t        retry: pubsubRetry\n\t\t        circuitBreaker:
+        pubsubCB\n\t\t\"\"\"\n}\nparameter: {\n\tnetwork: name: string\n\tuser:       string\n\tsubnetwork:
+        string\n\t// +usage=Define which protocol to use for dapr connections, options:
+        \"grpc\", \"http\". Defaults to \"grpc\".\n\tdaprProtocol: *\"grpc\" | \"http\"\n\tdaprGrpcPort:
+        *3500 | int\n\tdaprHttpPort: *3501 | int\n\tdaprAppPort:  *50001 | int\n}\n"

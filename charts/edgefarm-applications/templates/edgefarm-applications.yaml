@@ -1,0 +1,141 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  name: edgefarm-applications
+  labels:
+  {{- include "edgefarm-applications.labels" . | nindent 4 }}
+  annotations:
+    definition.oam.dev/description: Describes an edgefarm.application that runs on EdgeFarm
+      edge nodes.
+spec:
+  schematic:
+    cue:
+      template: "import \"list\"\n\npredefinedTolerations: [\n\t{\n\t\tkey:      \"edgefarm.io\"\n\t\toperator:
+        \"Exists\"\n\t\teffect:   \"NoSchedule\"\n\t},\n]\n\nparameterTolerations:
+        [\n\tif parameter.tolerations != _|_ {\n\t\tfor k in parameter.tolerations
+        {\n\t\t\tif k.key != _|_ {\n\t\t\t\tkey: k.key\n\t\t\t}\n\t\t\tif k.effect
+        != _|_ {\n\t\t\t\teffect: k.effect\n\t\t\t}\n\t\t\tif k.value != _|_ {\n\t\t\t\tvalue:
+        k.value\n\t\t\t}\n\t\t\toperator: k.operator\n\t\t\tif k.tolerationSeconds
+        != _|_ {\n\t\t\t\ttolerationSeconds: k.tolerationSeconds\n\t\t\t}\n\t\t}\n\t}]\n\noutput:
+        {\n\tapiVersion: \"apps.openyurt.io/v1alpha1\"\n\tkind:       \"YurtAppDaemon\"\n\tspec:
+        {\n\t\tif parameter[\"nodepoolSelector\"] != _|_ {\n\t\t\tnodepoolSelector:
+        parameter.nodepoolSelector\n\t\t}\n\n\t\tselector: matchLabels: {\n\t\t\t\"app.kubernetes.io/component\":
+        context.name\n\t\t\t\"app.kubernetes.io/app\":       context.appName\n\t\t}\n\t\tworkloadTemplate:
+        deploymentTemplate: {\n\t\t\tmetadata: labels: {\n\t\t\t\t\"app.kubernetes.io/component\":
+        context.name\n\t\t\t\t\"app.kubernetes.io/app\":       context.appName\n\t\t\t}\n\n\t\t\tspec:
+        {\n\t\t\t\treplicas: 1\n\t\t\t\tselector: matchLabels: {\n\t\t\t\t\t\"app.kubernetes.io/component\":
+        context.name\n\t\t\t\t\t\"app.kubernetes.io/app\":       context.appName\n\t\t\t\t}\n\t\t\t\ttemplate:
+        {\n\t\t\t\t\tmetadata: labels: {\n\t\t\t\t\t\t\"app.kubernetes.io/component\":
+        context.name\n\t\t\t\t\t\t\"app.kubernetes.io/app\":       context.appName\n\t\t\t\t\t}\n\t\t\t\t\tspec:
+        {\n\t\t\t\t\t\ttolerations: predefinedTolerations + parameterTolerations\n\t\t\t\t\t\tcontainers:
+        [{\n\t\t\t\t\t\t\tname:  context.name\n\t\t\t\t\t\t\timage: parameter.image\n\n\t\t\t\t\t\t\tif
+        parameter[\"imagePullPolicy\"] != _|_ {\n\t\t\t\t\t\t\t\timagePullPolicy:
+        parameter.imagePullPolicy\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif parameter[\"command\"]
+        != _|_ {\n\t\t\t\t\t\t\t\tcommand: parameter.command\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
+        parameter[\"args\"] != _|_ {\n\t\t\t\t\t\t\t\targs: parameter.args\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
+        parameter[\"env\"] != _|_ {\n\t\t\t\t\t\t\t\tenv: parameter.env\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
+        parameter[\"ports\"] != _|_ {\n\t\t\t\t\t\t\t\tports: parameter.ports\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tresources:
+        {\n\t\t\t\t\t\t\t\tif parameter.cpu != _|_ if parameter.memory != _|_ if parameter.requests
+        == _|_ if parameter.limits == _|_ {\n\t\t\t\t\t\t\t\t\t// +patchStrategy=retainKeys\n\t\t\t\t\t\t\t\t\trequests:
+        {\n\t\t\t\t\t\t\t\t\t\tcpu:    parameter.cpu\n\t\t\t\t\t\t\t\t\t\tmemory:
+        parameter.memory\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t// +patchStrategy=retainKeys\n\t\t\t\t\t\t\t\t\tlimits:
+        {\n\t\t\t\t\t\t\t\t\t\tcpu:    parameter.cpu\n\t\t\t\t\t\t\t\t\t\tmemory:
+        parameter.memory\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\t\tif
+        parameter.requests != _|_ {\n\t\t\t\t\t\t\t\t\t// +patchStrategy=retainKeys\n\t\t\t\t\t\t\t\t\trequests:
+        {\n\t\t\t\t\t\t\t\t\t\tcpu:    parameter.requests.cpu\n\t\t\t\t\t\t\t\t\t\tmemory:
+        parameter.requests.memory\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tif
+        parameter.limits != _|_ {\n\t\t\t\t\t\t\t\t\t// +patchStrategy=retainKeys\n\t\t\t\t\t\t\t\t\tlimits:
+        {\n\t\t\t\t\t\t\t\t\t\tcpu:    parameter.limits.cpu\n\t\t\t\t\t\t\t\t\t\tmemory:
+        parameter.limits.memory\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
+        parameter[\"livenessProbe\"] != _|_ {\n\t\t\t\t\t\t\t\tlivenessProbe: parameter.livenessProbe\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
+        parameter[\"readinessProbe\"] != _|_ {\n\t\t\t\t\t\t\t\treadinessProbe: parameter.readinessProbe\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
+        parameter[\"securityContext\"] != _|_ {\n\t\t\t\t\t\t\t\tsecurityContext:
+        parameter.securityContext\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}]\n\n\t\t\t\t\t\tif
+        parameter[\"imagePullSecrets\"] != _|_ {\n\t\t\t\t\t\t\timagePullSecrets:
+        [ for v in parameter.imagePullSecrets {\n\t\t\t\t\t\t\t\tname: v\n\t\t\t\t\t\t\t}]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\n#nodepoolSelector:
+        {\n\tmatchLabels?: [string]: string\n\tmatchExpressions?: [...{\n\t\tkey:
+        \     string\n\t\toperator: *\"In\" | \"NotIn\" | \"Exists\" | \"DoesNotExist\"\n\t\tvalues?:
+        [...string]\n\t}]\n}\n\n#tolerations: [...{\n\tkey?:     string\n\toperator:
+        *\"Equal\" | \"Exists\"\n\tvalue?:   string\n\teffect?:  \"NoSchedule\" |
+        \"PreferNoSchedule\" | \"NoExecute\"\n\t// +usage=Specify the period of time
+        the toleration\n\ttolerationSeconds?: int\n}]\n\nparameter: {\n\t// +usage=Which
+        image would you like to use for your application\n\timage: string\n\n\t//
+        +usage=Specify a list of nodepool selectors\n\tnodepoolSelector: #nodepoolSelector\n\n\t//
+        +usage=Specify tolerant taint\n\ttolerations?: #tolerations\n\n\t// +usage=Specify
+        image pull policy for your application\n\timagePullPolicy?: string\n\n\t//
+        +usage=Specify image pull secrets for your application\n\timagePullSecrets?:
+        [...string]\n\n\t// +usage=Commands to run in the container\n\tcommand?: [...string]\n\n\t//
+        +usage=Args to run for the command\n\targs?: [...string]\n\n\t// +usage=Specifies
+        the SecurityContext of the container\n\tsecurityContext?: {\n\t\t// +usage=AllowPrivilegeEscalation
+        controls whether a process can gain more privileges than its parent process.\n\t\tallowPrivilegeEscalation?:
+        bool\n\t\t// +uasge=The capabilities to add/drop when running containers.
+        \n\t\tcapabilities?: {\n\t\t\t// +usage=Added capabilities\n\t\t\tadd?: [...string]\n\t\t\t//
+        +usage=Dropped capabilities\n\t\t\tdrop?: [...string]\n\t\t}\n\t\t// +usage=Run
+        container in privileged mode. \n\t\tprivileged?: bool\n\t\t// +usage=Whether
+        this container has a read-only root filesystem.\n\t\treadOnlyRootFilesystem?:
+        bool\n\t\t// +usage=The GID to run the entrypoint of the container process.\n\t\trunAsGroup?:
+        int\n\t\t// +usage=Indicates that the container must run as a non-root user.\n\t\trunAsNonRoot?:
+        bool\n\t\t// +usage=The UID to run the entrypoint of the container process.
+        \n\t\trunAsUser?: int\n\t\t// procMount currently ununsed\n\t\t// procMount?:
+        string\n\t\t// seLinuxOptions currently ununsed\n\t\t// seLinuxOptions?: {...}\n\t\t//
+        seccompProfile currently ununsed\n\t\t// seccompProfile?: {}\n\t\t// windowsOptions
+        never used\n\t}\n\n\t// +usage=Define arguments by using environment variables\n\tenv?:
+        [...{\n\t\t// +usage=Environment variable name\n\t\tname: string\n\t\t// +usage=The
+        value of the environment variable\n\t\tvalue?: string\n\t\t// +usage=Specifies
+        a source the value of this var should come from\n\t\tvalueFrom?: {\n\t\t\t//
+        +usage=Selects a key of a secret in the pod's namespace\n\t\t\tsecretKeyRef?:
+        {\n\t\t\t\t// +usage=The name of the secret in the pod's namespace to select
+        from\n\t\t\t\tname: string\n\t\t\t\t// +usage=The key of the secret to select
+        from. Must be a valid secret key\n\t\t\t\tkey: string\n\t\t\t}\n\t\t\t// +usage=Selects
+        a key of a config map in the pod's namespace\n\t\t\tconfigMapKeyRef?: {\n\t\t\t\t//
+        +usage=The name of the config map in the pod's namespace to select from\n\t\t\t\tname:
+        string\n\t\t\t\t// +usage=The key of the config map to select from. Must be
+        a valid secret key\n\t\t\t\tkey: string\n\t\t\t}\n\t\t}\n\t}]\n\n\t// +usage=Specify
+        port mappings\n\tports?: [...{\n\t\t// +usage=Name of the port mapping\n\t\tname?:
+        string\n\t\t// +usage=The container port to expose\n\t\tcontainerPort: int\n\t\t//
+        +usage=The host port the container port is mapped to\n\t\thostPort: int\n\t\t//
+        +usage=The protocol of the port mapping\n\t\tprotocol?: string\n\t}]\n\n\t//
+        +usage=Specify the amount of cpu for requests and limits\n\tcpu?: *\"0.25\"
+        | number | string\n\t// +usage=Specify the amount of memory for requests and
+        limits\n\tmemory?: *\"256Mi\" | =~\"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$\"\n\t//
+        +usage=Specify the resources in requests\n\trequests?: {\n\t\t// +usage=Specify
+        the amount of cpu for requests\n\t\tcpu: *\"0.25\" | number | string\n\t\t//
+        +usage=Specify the amount of memory for requests\n\t\tmemory: *\"256Mi\" |
+        =~\"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$\"\n\t}\n\t// +usage=Specify
+        the resources in limits\n\tlimits?: {\n\t\t// +usage=Specify the amount of
+        cpu for limits\n\t\tcpu: *\"0.5\" | number | string\n\t\t// +usage=Specify
+        the amount of memory for limits\n\t\tmemory: *\"512Mi\" | =~\"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$\"\n\t}\n\n\t//
+        +usage=Instructions for assessing whether the container is alive.\n\tlivenessProbe?:
+        #HealthProbe\n\t// +usage=Instructions for assessing whether the container
+        is in a suitable state to serve traffic.\n\treadinessProbe?: #HealthProbe\n}\n\n#HealthProbe:
+        {\n\t// +usage=Instructions for assessing container health by executing a
+        command. Either this attribute or the httpGet attribute or the tcpSocket attribute
+        MUST be specified. This attribute is mutually exclusive with both the httpGet
+        attribute and the tcpSocket attribute.\n\texec?: {\n\t\t// +usage=A command
+        to be executed inside the container to assess its health. Each space delimited
+        token of the command is a separate array element. Commands exiting 0 are considered
+        to be successful probes, whilst all other exit codes are considered failures.\n\t\tcommand:
+        [...string]\n\t}\n\t// +usage=Instructions for assessing container health
+        by executing an HTTP GET request. Either this attribute or the exec attribute
+        or the tcpSocket attribute MUST be specified. This attribute is mutually exclusive
+        with both the exec attribute and the tcpSocket attribute.\n\thttpGet?: {\n\t\t//
+        +usage=The endpoint, relative to the port, to which the HTTP GET request should
+        be directed.\n\t\tpath: string\n\t\t// +usage=The TCP socket within the container
+        to which the HTTP GET request should be directed.\n\t\tport: int\n\t\thttpHeaders?:
+        [...{\n\t\t\tname:  string\n\t\t\tvalue: string\n\t\t}]\n\t}\n\t// +usage=Instructions
+        for assessing container health by probing a TCP socket. Either this attribute
+        or the exec attribute or the httpGet attribute MUST be specified. This attribute
+        is mutually exclusive with both the exec attribute and the httpGet attribute.\n\ttcpSocket?:
+        {\n\t\t// +usage=The TCP socket within the container that should be probed
+        to assess container health.\n\t\tport: int\n\t}\n\t// +usage=Number of seconds
+        after the container is started before the first probe is initiated.\n\tinitialDelaySeconds:
+        *0 | int\n\t// +usage=How often, in seconds, to execute the probe.\n\tperiodSeconds:
+        *10 | int\n\t// +usage=Number of seconds after which the probe times out.\n\ttimeoutSeconds:
+        *1 | int\n\t// +usage=Minimum consecutive successes for the probe to be considered
+        successful after having failed.\n\tsuccessThreshold: *1 | int\n\t// +usage=Number
+        of consecutive failures required to determine the container is not alive (liveness
+        probe) or not ready (readiness probe).\n\tfailureThreshold: *3 | int\n}\n"
+  workload:
+    definition:
+      apiVersion: apps.openyurt.io/v1alpha1
+      kind: YurtAppDaemon

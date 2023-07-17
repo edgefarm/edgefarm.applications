@@ -1,0 +1,23 @@
+apiVersion: v2
+name: edgefarm-applications
+description: A Helm chart for edgefarm.applications.
+
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+
+keywords:
+  - edgefarm.applications
+  - kubevela
+
+sources:
+  - https://github.com/edgefarm/edgefarm.applications
+
+maintainers:
+  - name: Armin Schlegel
+    email: armin.schlegel@gmx.de
+
+dependencies:
+  - name: vela-core
+    version: 1.8.0
+    repository: https://charts.kubevela.net/core

@@ -1,0 +1,47 @@
+{
+  "branches": [
+    {
+      "name": "main"
+    },
+    {
+      "name": "beta",
+      "prerelease": true
+    }
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "make install-helmify && make helm"
+      }
+    ],
+    [
+      "semantic-release-helm3",
+      {
+        "chartPath": "./charts/edgefarm-applications",
+        "registry": "ghcr.io/edgefarm/edgefarm.applications"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "charts/edgefarm-applications/Chart.yaml",
+          "charts/edgefarm-applications/templates/edgefarm-applications.yaml",
+          "charts/edgefarm-applications/templates/edgefarm-network-trait.yaml",
+          "charts/edgefarm-applications/templates/edgefarm-storage-trait.yaml"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/github",
+      {
+        "successComment": false,
+        "failTitle": false
+      }
+    ]
+  ]
+}

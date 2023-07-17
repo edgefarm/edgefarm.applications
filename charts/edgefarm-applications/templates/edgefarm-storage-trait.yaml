@@ -1,0 +1,78 @@
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: edgefarm-storage
+  labels:
+  {{- include "edgefarm-applications.labels" . | nindent 4 }}
+  annotations:
+    definition.oam.dev/description: Add storages to edgefarm.applications workload.
+spec:
+  appliesToWorkloads:
+  - yurtappdaemons.apps
+  podDisruptive: true
+  schematic:
+    cue:
+      template: "volumesList: [\n\tif parameter.configMap != _|_ for v in parameter.configMap
+        if v.mountPath != _|_ {\n\t\t{\n\t\t\tname: \"configmap-\" + v.name\n\t\t\tconfigMap:
+        {\n\t\t\t\tdefaultMode: v.defaultMode\n\t\t\t\tname:        v.name\n\t\t\t\tif
+        v.items != _|_ {\n\t\t\t\t\titems: v.items\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\tif
+        parameter.secret != _|_ for v in parameter.secret if v.mountPath != _|_ {\n\t\t{\n\t\t\tname:
+        \"secret-\" + v.name\n\t\t\tsecret: {\n\t\t\t\tdefaultMode: v.defaultMode\n\t\t\t\tsecretName:
+        \ v.name\n\t\t\t\tif v.items != _|_ {\n\t\t\t\t\titems: v.items\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t},\n\tif
+        parameter.emptyDir != _|_ for v in parameter.emptyDir {\n\t\t{\n\t\t\tname:
+        \"emptydir-\" + v.name\n\t\t\temptyDir: medium: v.medium\n\t\t}\n\t},\n\tif
+        parameter.hostPath != _|_ for v in parameter.hostPath {\n\t\t{\n\t\t\tname:
+        \"hostpath-\" + v.name\n\t\t\tpath: v.path\n\t\t}\n\t},\n]\n\nvolumeMountsList:
+        [\n\tif parameter.configMap != _|_ for v in parameter.configMap if v.mountPath
+        != _|_ {\n\t\t{\n\t\t\tname:      \"configmap-\" + v.name\n\t\t\tmountPath:
+        v.mountPath\n\t\t\tif v.subPath != _|_ {\n\t\t\t\tsubPath: v.subPath\n\t\t\t}\n\t\t}\n\t},\n\tif
+        parameter.secret != _|_ for v in parameter.secret if v.mountPath != _|_ {\n\t\t{\n\t\t\tname:
+        \     \"secret-\" + v.name\n\t\t\tmountPath: v.mountPath\n\t\t\tif v.subPath
+        != _|_ {\n\t\t\t\tsubPath: v.subPath\n\t\t\t}\n\t\t}\n\t},\n\tif parameter.emptyDir
+        != _|_ for v in parameter.emptyDir {\n\t\t{\n\t\t\tname:      \"emptydir-\"
+        + v.name\n\t\t\tmountPath: v.mountPath\n\t\t\tif v.subPath != _|_ {\n\t\t\t\tsubPath:
+        v.subPath\n\t\t\t}\n\t\t}\n\t},\n\tif parameter.hostPath != _|_ for v in parameter.hostPath
+        {\n\t\t{\n\t\t\tname:      \"hostpath-\" + v.name\n\t\t\tmountPath: v.mountPath\n\t\t}\n\t},\n]\n\nenvList:
+        [\n\tif parameter.configMap != _|_ for v in parameter.configMap if v.mountToEnv
+        != _|_ {\n\t\t{\n\t\t\tname: v.mountToEnv.envName\n\t\t\tvalueFrom: configMapKeyRef:
+        {\n\t\t\t\tname: v.name\n\t\t\t\tkey:  v.mountToEnv.configMapKey\n\t\t\t}\n\t\t}\n\t},\n\tif
+        parameter.configMap != _|_ for v in parameter.configMap if v.mountToEnvs !=
+        _|_ for k in v.mountToEnvs {\n\t\t{\n\t\t\tname: k.envName\n\t\t\tvalueFrom:
+        configMapKeyRef: {\n\t\t\t\tname: v.name\n\t\t\t\tkey:  k.configMapKey\n\t\t\t}\n\t\t}\n\t},\n\tif
+        parameter.secret != _|_ for v in parameter.secret if v.mountToEnv != _|_ {\n\t\t{\n\t\t\tname:
+        v.mountToEnv.envName\n\t\t\tvalueFrom: secretKeyRef: {\n\t\t\t\tname: v.name\n\t\t\t\tkey:
+        \ v.mountToEnv.secretKey\n\t\t\t}\n\t\t}\n\t},\n\tif parameter.secret != _|_
+        for v in parameter.secret if v.mountToEnvs != _|_ for k in v.mountToEnvs {\n\t\t{\n\t\t\tname:
+        k.envName\n\t\t\tvalueFrom: secretKeyRef: {\n\t\t\t\tname: v.name\n\t\t\t\tkey:
+        \ k.secretKey\n\t\t\t}\n\t\t}\n\t},\n]\n\ndeDupVolumesArray: [\n\tfor val
+        in [\n\t\tfor i, vi in volumesList {\n\t\t\tfor j, vj in volumesList if j
+        < i && vi.name == vj.name {\n\t\t\t\t_ignore: true\n\t\t\t}\n\t\t\tvi\n\t\t},\n\t]
+        if val._ignore == _|_ {\n\t\tval\n\t},\n]\npatch: spec: workloadTemplate:
+        deploymentTemplate: spec: template: spec: {\n\t// +patchKey=name\n\t// +patchStrategy=retainKeys\n\tvolumes:
+        deDupVolumesArray\n\n\t// +patchKey=name\t\n\tcontainers: [{\n\t\t// +patchKey=name\n\t\tenv:
+        envList\n\t\t// +patchKey=name\n\t\tvolumeMounts: volumeMountsList\n\t}, ...]\n}\noutputs:
+        {\n\tfor v in parameter.configMap {\n\t\tif v.mountOnly == false {\n\t\t\t\"configmap-\\(v.name)\":
+        {\n\t\t\t\tapiVersion: \"v1\"\n\t\t\t\tkind:       \"ConfigMap\"\n\t\t\t\tmetadata:
+        name: v.name\n\t\t\t\tif v.data != _|_ {\n\t\t\t\t\tdata: v.data\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n\tfor
+        v in parameter.secret {\n\t\tif v.mountOnly == false {\n\t\t\t\"secret-\\(v.name)\":
+        {\n\t\t\t\tapiVersion: \"v1\"\n\t\t\t\tkind:       \"Secret\"\n\t\t\t\tmetadata:
+        name: v.name\n\t\t\t\tif v.data != _|_ {\n\t\t\t\t\tdata: v.data\n\t\t\t\t}\n\t\t\t\tif
+        v.stringData != _|_ {\n\t\t\t\t\tstringData: v.stringData\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\nparameter:
+        {\n\t// +usage=Declare config map type storage\n\tconfigMap?: [...{\n\t\tname:
+        \     string\n\t\tmountOnly: *false | bool\n\t\tmountToEnv?: {\n\t\t\tenvName:
+        \     string\n\t\t\tconfigMapKey: string\n\t\t}\n\t\tmountToEnvs?: [...{\n\t\t\tenvName:
+        \     string\n\t\t\tconfigMapKey: string\n\t\t}]\n\t\tmountPath?:  string\n\t\tsubPath?:
+        \   string\n\t\tdefaultMode: *420 | int\n\t\treadOnly:    *false | bool\n\t\tdata?:
+        {...}\n\t\titems?: [...{\n\t\t\tkey:  string\n\t\t\tpath: string\n\t\t\tmode:
+        *511 | int\n\t\t}]\n\t}]\n\n\t// +usage=Declare secret type storage\n\tsecret?:
+        [...{\n\t\tname:      string\n\t\tmountOnly: *false | bool\n\t\tmountToEnv?:
+        {\n\t\t\tenvName:   string\n\t\t\tsecretKey: string\n\t\t}\n\t\tmountToEnvs?:
+        [...{\n\t\t\tenvName:   string\n\t\t\tsecretKey: string\n\t\t}]\n\t\tmountPath:
+        \  string\n\t\tsubPath?:    string\n\t\tdefaultMode: *420 | int\n\t\treadOnly:
+        \   *false | bool\n\t\tstringData?: {...}\n\t\tdata?: {...}\n\t\titems?: [...{\n\t\t\tkey:
+        \ string\n\t\t\tpath: string\n\t\t\tmode: *511 | int\n\t\t}]\n\t}]\n\n\t//
+        +usage=Declare empty dir type storage\n\temptyDir?: [...{\n\t\tname:      string\n\t\tmountPath:
+        string\n\t\tsubPath?:  string\n\t\tmedium:    *\"\" | \"Memory\"\n\t}]\n\n\t//
+        +usage=Declare host path type storage\n\thostPath?: [...{\n\t\tname:      string\n\t\tpath:
+        \     string\n\t\tmountPath: string\n\t\ttype:      *\"Directory\" | \"DirectoryOrCreate\"
+        | \"FileOrCreate\" | \"File\" | \"Socket\" | \"CharDevice\" | \"BlockDevice\"\n\t}]\n}\n"
