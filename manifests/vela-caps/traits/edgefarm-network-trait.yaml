@@ -28,7 +28,7 @@ spec:
         			},
         			{
         				name: "dapr-resiliency"
-        				configMap: name: "resiliency-" + parameter.network.name + "-" + parameter.network.user
+        				configMap: name: "resiliency-" + parameter.network.name + "-" + parameter.network.user + "-" + context.name
         			},
         		]
         		initContainers: [{
@@ -112,7 +112,7 @@ spec:
         outputs: "resiliency-dapr-component": {
         	apiVersion: "v1"
         	kind:       "ConfigMap"
-        	metadata: name: "resiliency-" + parameter.network.name + "-" + parameter.network.user
+        	metadata: name: "resiliency-" + parameter.network.name + "-" + parameter.network.user + "-" + context.name
         	data: "resiliency.yaml": """
         		apiVersion: dapr.io/v1alpha1
         		kind: Resiliency

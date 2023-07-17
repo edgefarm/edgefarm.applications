@@ -32,7 +32,7 @@ template: {
                         {
                             name: "dapr-resiliency"
                             configMap:
-                                name: "resiliency-"+parameter.network.name+"-"+parameter.network.user
+                                name: "resiliency-"+parameter.network.name+"-"+parameter.network.user+"-"+context.name
                         },
                     ]
                     initContainers: [{
@@ -122,7 +122,7 @@ template: {
             apiVersion: "v1"
             kind: "ConfigMap"
             metadata: {
-                name: "resiliency-"+parameter.network.name+"-"+parameter.network.user
+                name: "resiliency-"+parameter.network.name+"-"+parameter.network.user+"-"+context.name
             }
             data: {
                 "resiliency.yaml": """
