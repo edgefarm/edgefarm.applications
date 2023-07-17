@@ -1,4 +1,4 @@
-NAMESPACE=edgefarm-applications
+?NAMESPACE=edgefarm-applications
 all: render deploy helm ## renders and deploys all templates into the current k8s cluster
 render: traits-render components-render ## renders all templates
 apply: traits-apply components-apply ## applies all templates
