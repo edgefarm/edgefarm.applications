@@ -19,5 +19,5 @@ maintainers:
 
 dependencies:
   - name: vela-core
-    version: 1.8.0
+    version: 1.8.2
     repository: https://charts.kubevela.net/core

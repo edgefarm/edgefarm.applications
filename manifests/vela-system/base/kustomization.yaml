@@ -5,7 +5,7 @@ kind: Kustomization
 helmCharts:
   - name: vela-core
     namespace: vela-system
-    version: 1.8.0
+    version: 1.8.2
     repo: https://charts.kubevela.net/core
     releaseName: kubevela
     includeCRDs: true
