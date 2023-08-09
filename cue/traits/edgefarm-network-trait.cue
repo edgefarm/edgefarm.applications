@@ -46,7 +46,7 @@ template: {
                         }]
                         image:           "bash:5.1-alpine3.17"
                         imagePullPolicy: "IfNotPresent"
-                        name:            "init-dapr-network-"+parameter.network.name+"-"+context.namespace+"-"+parameter.network.subnetwork
+                        name:            "init-dapr"
                         volumeMounts: [{
                             mountPath: "/config/"
                             name:      "config"+parameter.network.name+"-"+parameter.network.user,

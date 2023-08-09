@@ -28,8 +28,7 @@ spec:
         parameter.network.name + \"-\" + context.namespace + \"-\" + parameter.network.subnetwork\n\t\t\t},
         {\n\t\t\t\tname: \"SUBNETWORK_NAMESPACE\"\n\t\t\t\tvalueFrom: fieldRef: fieldPath:
         \"metadata.namespace\"\n\t\t\t}]\n\t\t\timage:           \"bash:5.1-alpine3.17\"\n\t\t\timagePullPolicy:
-        \"IfNotPresent\"\n\t\t\tname:            \"init-dapr-network-\" + parameter.network.name
-        + \"-\" + context.namespace + \"-\" + parameter.network.subnetwork\n\t\t\tvolumeMounts:
+        \"IfNotPresent\"\n\t\t\tname:            \"init-dapr\"\n\t\t\tvolumeMounts:
         [{\n\t\t\t\tmountPath: \"/config/\"\n\t\t\t\tname:      \"config\" + parameter.network.name
         + \"-\" + parameter.network.user\n\t\t\t},\n\t\t\t\t{\n\t\t\t\t\tmountPath:
         \"/secret\"\n\t\t\t\t\tname:      \"secret-\" + parameter.network.name + \"-\"
