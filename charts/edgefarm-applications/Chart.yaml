@@ -2,8 +2,8 @@ apiVersion: v2
 name: edgefarm-applications
 description: A Helm chart for edgefarm.applications.
 type: application
-version: 1.0.0-beta.27
-appVersion: 1.0.0-beta.27
+version: 1.0.0-beta.28
+appVersion: 1.0.0-beta.28
 keywords:
   - edgefarm.applications
   - kubevela
