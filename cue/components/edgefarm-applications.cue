@@ -81,10 +81,7 @@ template: {
 								containers: [{
 									name:  context.name
 									image: parameter.image
-
-									if parameter["imagePullPolicy"] != _|_ {
-										imagePullPolicy: parameter.imagePullPolicy
-									}
+									imagePullPolicy: parameter.imagePullPolicy
 
 									if parameter["command"] != _|_ {
 										command: parameter.command
@@ -188,7 +185,7 @@ template: {
 		tolerations?: #tolerations
 
 		// +usage=Specify image pull policy for your application
-		imagePullPolicy?: string
+		imagePullPolicy:  *"IfNotPresent" | "Always" | "Never"
 
 		// +usage=Specify image pull secrets for your application
 		imagePullSecrets?: [...string]

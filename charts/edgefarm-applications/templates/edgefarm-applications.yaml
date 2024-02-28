@@ -28,10 +28,9 @@ spec:
         {\n\t\t\t\t\tmetadata: labels: {\n\t\t\t\t\t\t\"app.kubernetes.io/component\":
         context.name\n\t\t\t\t\t\t\"app.kubernetes.io/app\":       context.appName\n\t\t\t\t\t}\n\t\t\t\t\tspec:
         {\n\t\t\t\t\t\ttolerations: predefinedTolerations + parameterTolerations\n\t\t\t\t\t\tcontainers:
-        [{\n\t\t\t\t\t\t\tname:  context.name\n\t\t\t\t\t\t\timage: parameter.image\n\n\t\t\t\t\t\t\tif
-        parameter[\"imagePullPolicy\"] != _|_ {\n\t\t\t\t\t\t\t\timagePullPolicy:
-        parameter.imagePullPolicy\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif parameter[\"command\"]
-        != _|_ {\n\t\t\t\t\t\t\t\tcommand: parameter.command\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
+        [{\n\t\t\t\t\t\t\tname:            context.name\n\t\t\t\t\t\t\timage:           parameter.image\n\t\t\t\t\t\t\timagePullPolicy:
+        parameter.imagePullPolicy\n\n\t\t\t\t\t\t\tif parameter[\"command\"] != _|_
+        {\n\t\t\t\t\t\t\t\tcommand: parameter.command\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
         parameter[\"args\"] != _|_ {\n\t\t\t\t\t\t\t\targs: parameter.args\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
         parameter[\"env\"] != _|_ {\n\t\t\t\t\t\t\t\tenv: parameter.env\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif
         parameter[\"ports\"] != _|_ {\n\t\t\t\t\t\t\t\tports: parameter.ports\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tresources:
@@ -62,11 +61,12 @@ spec:
         image would you like to use for your application\n\timage: string\n\n\t//
         +usage=Specify a list of nodepool selectors\n\tnodepoolSelector: #nodepoolSelector\n\n\t//
         +usage=Specify tolerant taint\n\ttolerations?: #tolerations\n\n\t// +usage=Specify
-        image pull policy for your application\n\timagePullPolicy?: string\n\n\t//
-        +usage=Specify image pull secrets for your application\n\timagePullSecrets?:
-        [...string]\n\n\t// +usage=Commands to run in the container\n\tcommand?: [...string]\n\n\t//
-        +usage=Args to run for the command\n\targs?: [...string]\n\n\t// +usage=Specifies
-        the SecurityContext of the container\n\tsecurityContext?: {\n\t\t// +usage=AllowPrivilegeEscalation
+        image pull policy for your application\n\timagePullPolicy: *\"IfNotPresent\"
+        | \"Always\" | \"Never\"\n\n\t// +usage=Specify image pull secrets for your
+        application\n\timagePullSecrets?: [...string]\n\n\t// +usage=Commands to run
+        in the container\n\tcommand?: [...string]\n\n\t// +usage=Args to run for the
+        command\n\targs?: [...string]\n\n\t// +usage=Specifies the SecurityContext
+        of the container\n\tsecurityContext?: {\n\t\t// +usage=AllowPrivilegeEscalation
         controls whether a process can gain more privileges than its parent process.\n\t\tallowPrivilegeEscalation?:
         bool\n\t\t// +uasge=The capabilities to add/drop when running containers.
         \n\t\tcapabilities?: {\n\t\t\t// +usage=Added capabilities\n\t\t\tadd?: [...string]\n\t\t\t//

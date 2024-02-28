@@ -90,6 +90,7 @@ template: {
                     {
                         name:  "dapr",
                         image: "daprio/daprd:1.10.5",
+                        imagePullPolicy: "IfNotPresent",
                         command:  [
                             "./daprd",
                             "--dapr-grpc-port",

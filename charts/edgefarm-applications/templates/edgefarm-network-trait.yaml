@@ -41,7 +41,8 @@ spec:
         \"localhost:\\(parameter.daprGrpcPort)\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\tname:
         \ \"DAPR_HTTP_ADDRESS\"\n\t\t\t\t\tvalue: \"localhost:\\(parameter.daprHttpPort)\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\tname:
         \"NODE_NAME\"\n\t\t\t\t\tvalueFrom: fieldRef: fieldPath: \"spec.nodeName\"\n\t\t\t\t},\n\t\t\t]\n\t\t},\n\t\t\t{\n\t\t\t\tname:
-        \ \"dapr\"\n\t\t\t\timage: \"daprio/daprd:1.10.5\"\n\t\t\t\tcommand: [\n\t\t\t\t\t\"./daprd\",\n\t\t\t\t\t\"--dapr-grpc-port\",\n\t\t\t\t\t\"\\(parameter.daprGrpcPort)\",\n\t\t\t\t\t\"--components-path\",\n\t\t\t\t\t\"/config\",\n\t\t\t\t\t\"--dapr-http-port\",\n\t\t\t\t\t\"\\(parameter.daprHttpPort)\",\n\t\t\t\t\t\"--app-port\",\n\t\t\t\t\t\"\\(parameter.daprAppPort)\",\n\t\t\t\t\t\"--app-protocol\",\n\t\t\t\t\tparameter.daprProtocol,\n\t\t\t\t\t\"--app-id\",\n\t\t\t\t\tcontext.name,\n\t\t\t\t]\n\t\t\t\tvolumeMounts:
+        \           \"dapr\"\n\t\t\t\timage:           \"daprio/daprd:1.10.5\"\n\t\t\t\timagePullPolicy:
+        \"IfNotPresent\"\n\t\t\t\tcommand: [\n\t\t\t\t\t\"./daprd\",\n\t\t\t\t\t\"--dapr-grpc-port\",\n\t\t\t\t\t\"\\(parameter.daprGrpcPort)\",\n\t\t\t\t\t\"--components-path\",\n\t\t\t\t\t\"/config\",\n\t\t\t\t\t\"--dapr-http-port\",\n\t\t\t\t\t\"\\(parameter.daprHttpPort)\",\n\t\t\t\t\t\"--app-port\",\n\t\t\t\t\t\"\\(parameter.daprAppPort)\",\n\t\t\t\t\t\"--app-protocol\",\n\t\t\t\t\tparameter.daprProtocol,\n\t\t\t\t\t\"--app-id\",\n\t\t\t\t\tcontext.name,\n\t\t\t\t]\n\t\t\t\tvolumeMounts:
         [\n\t\t\t\t\t{\n\t\t\t\t\t\tname:      \"config\" + parameter.network.name
         + \"-\" + parameter.network.user\n\t\t\t\t\t\tmountPath: \"/config/\"\n\t\t\t\t\t\treadOnly:
         \ true\n\t\t\t\t\t},\n\t\t\t\t]\n\t\t\t}]\n\t}\n}\noutputs: \"resiliency-dapr-component\":
